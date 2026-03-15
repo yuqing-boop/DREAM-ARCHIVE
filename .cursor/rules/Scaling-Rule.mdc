@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+
+Avoid small fixed pixel sizes (e.g., 100px). Use relative units like w-full, h-3/4, or max-w-6xl to ensure media slots feel substantial on the PC screen.

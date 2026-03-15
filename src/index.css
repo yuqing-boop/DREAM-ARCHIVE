@@ -1,0 +1,232 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   GLOBAL RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #1a0008;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Federo', sans-serif;
+  color: #f0e0e0;
+}
+
+/* ============================================================
+   UNIFIED CONSOLE — Velvet red shell, soft unified surface
+   Rule: one wrapper for the entire functional area.
+   ============================================================ */
+.unified-console {
+  background: #6e0e1b;
+  border: none;
+  border-radius: 32px;
+  box-shadow:
+    /* Outer soft ambient glow — no hard ring */
+    0 16px 56px rgba(0, 0, 0, 0.72),
+    0  6px 24px rgba(80, 0, 18, 0.45),
+    /* Velvet depth — edges absorb inward, zero highlights */
+    inset 0   0  120px rgba(0, 0, 0, 0.48),
+    inset 0  12px 48px  rgba(0, 0, 0, 0.38),
+    inset 0 -12px 48px  rgba(0, 0, 0, 0.35),
+    inset  12px 0  46px rgba(0, 0, 0, 0.30),
+    inset -12px 0  46px rgba(0, 0, 0, 0.30);
+  position: relative;
+  overflow: hidden;
+}
+
+.unified-console::before {
+  display: none;
+}
+
+/* ============================================================
+   SCREEN LIP — The seamless high-contrast scoop/recess lip
+   Consistency Rule: shared gradient logic for all carved windows
+   ============================================================ */
+.screen-lip {
+  /* Transparent — the console red shows through, shadows carve the depth */
+  background: transparent;
+  border: none;
+  border-radius: 20px;
+  box-shadow:
+    inset  0    0   100px rgba(0, 0, 0, 0.78),
+    inset  0   28px  60px rgba(0, 0, 0, 0.62),
+    inset  0  -28px  60px rgba(0, 0, 0, 0.55),
+    inset  28px  0   60px rgba(0, 0, 0, 0.48),
+    inset -28px  0   60px rgba(0, 0, 0, 0.48);
+  padding: 10px;
+  position: relative;
+}
+
+/* ============================================================
+   RECESSED SCREEN — The dark CRT display area
+   Consistency Rule: shares the carved-window gradient logic
+   ============================================================ */
+.recessed-screen {
+  background: #050505;
+  border-radius: 14px;
+  box-shadow:
+    inset 8px 8px 24px rgba(0, 0, 0, 0.9),
+    inset -4px -4px 12px rgba(255, 255, 255, 0.04),
+    0 0 0 2px rgba(0, 0, 0, 0.7);
+  position: relative;
+  overflow: hidden;
+}
+
+/* CRT Scanline overlay */
+.recessed-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.18) 3px,
+    rgba(0, 0, 0, 0.18) 4px
+  );
+  pointer-events: none;
+  z-index: 5;
+  border-radius: 14px;
+}
+
+/* Green phosphor glow tint for main feed screens */
+.recessed-screen.phosphor {
+  background: #030d03;
+}
+
+.recessed-screen.phosphor::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(26, 143, 52, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 4;
+  border-radius: 14px;
+}
+
+/* ============================================================
+   OVAL BUTTON — Tactile hardware buttons
+   ============================================================ */
+.oval-btn {
+  font-family: 'Amarante', serif;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  border-radius: 50px;
+  padding: 0.6em 1.8em;
+  position: relative;
+  transition: transform 80ms ease, box-shadow 80ms ease;
+  user-select: none;
+}
+
+.oval-btn:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0px rgba(0, 0, 0, 0.5),
+    inset -8px -8px 18px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Red variant — default console action */
+.oval-btn-red {
+  background: linear-gradient(145deg, #e8294d, #a0102a);
+  color: #fff;
+  border: 2px solid #6a0018;
+  box-shadow:
+    0 6px 0px rgba(0, 0, 0, 0.5),
+    inset -12px -12px 25px rgba(0, 0, 0, 0.8),
+    inset 6px 6px 15px rgba(255, 100, 120, 0.3);
+}
+
+.oval-btn-red:hover {
+  background: linear-gradient(145deg, #f03356, #b5152f);
+}
+
+/* Purple variant — archive/selection */
+.oval-btn-purple {
+  background: linear-gradient(145deg, #7a44e8, #3d1a99);
+  color: #fff;
+  border: 2px solid #2a0d6a;
+  box-shadow:
+    0 6px 0px rgba(0, 0, 0, 0.5),
+    inset -12px -12px 25px rgba(0, 0, 0, 0.8),
+    inset 6px 6px 15px rgba(140, 80, 255, 0.3);
+}
+
+.oval-btn-purple:hover {
+  background: linear-gradient(145deg, #8a54f8, #4e2ab0);
+}
+
+/* Green variant — execute/confirm */
+.oval-btn-green {
+  background: linear-gradient(145deg, #2ab84a, #0e6622);
+  color: #fff;
+  border: 2px solid #0a3d16;
+  box-shadow:
+    0 6px 0px rgba(0, 0, 0, 0.5),
+    inset -12px -12px 25px rgba(0, 0, 0, 0.8),
+    inset 6px 6px 15px rgba(60, 200, 80, 0.3);
+}
+
+.oval-btn-green:hover {
+  background: linear-gradient(145deg, #35d058, #1a8f34);
+}
+
+/* ============================================================
+   TYPOGRAPHY UTILITIES
+   ============================================================ */
+.font-amarante {
+  font-family: 'Amarante', serif;
+}
+
+.font-federo {
+  font-family: 'Federo', sans-serif;
+}
+
+/* Embossed title text on plastic */
+.console-title {
+  font-family: 'Amarante', serif;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35),
+    0 -2px 4px rgba(0, 0, 0, 0.8);
+  color: #ffe8ec;
+}
+
+/* Glowing label text inside recessed screens */
+.screen-label {
+  font-family: 'Federo', sans-serif;
+  color: #c8f0c8;
+  text-shadow: 0 0 8px rgba(26, 200, 60, 0.6);
+}
+
+/* ============================================================
+   SCROLLBAR — Styled for the aesthetic
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a0008;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6a0018;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C41E3A;
+}
