@@ -28,25 +28,34 @@ body {
    Rule: one wrapper for the entire functional area.
    ============================================================ */
 .unified-console {
-  background: #6e0e1b;
-  border: none;
-  border-radius: 32px;
+  background: rgba(71, 21, 36, 1);
+  border: 3px solid rgba(55, 27, 27, 1);
+  border-image: none;
+  border-radius: 70px;
+  box-sizing: content-box;
   box-shadow:
-    /* Outer soft ambient glow — no hard ring */
-    0 16px 56px rgba(0, 0, 0, 0.72),
-    0  6px 24px rgba(80, 0, 18, 0.45),
-    /* Velvet depth — edges absorb inward, zero highlights */
-    inset 0   0  120px rgba(0, 0, 0, 0.48),
-    inset 0  12px 48px  rgba(0, 0, 0, 0.38),
-    inset 0 -12px 48px  rgba(0, 0, 0, 0.35),
-    inset  12px 0  46px rgba(0, 0, 0, 0.30),
-    inset -12px 0  46px rgba(0, 0, 0, 0.30);
+    inset 12px 15px 15px 12px rgba(84, 8, 27, 0.8),
+    inset -30px -30px 70px 0px rgba(119, 34, 34, 0.6),
+    0px 4px 12px 0px rgba(0, 0, 0, 0.15),
+    inset 8px -8px 7px 5px rgba(0, 0, 0, 1),
+    inset -14px 14px 12px 5px rgba(0, 0, 0, 0.8),
+    inset 8px -8px 12px 1px rgba(0, 0, 0, 0.8),
+    0px 4px 12px 1px rgba(0, 0, 0, 0.8);
   position: relative;
   overflow: hidden;
 }
 
-.unified-console::before {
-  display: none;
+.console-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  mix-blend-mode: screen;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* ============================================================
@@ -55,16 +64,15 @@ body {
    ============================================================ */
 .screen-lip {
   /* Transparent — the console red shows through, shadows carve the depth */
-  background: transparent;
+  background: unset;
   border: none;
   border-radius: 20px;
-  box-shadow:
-    inset  0    0   100px rgba(0, 0, 0, 0.78),
-    inset  0   28px  60px rgba(0, 0, 0, 0.62),
-    inset  0  -28px  60px rgba(0, 0, 0, 0.55),
-    inset  28px  0   60px rgba(0, 0, 0, 0.48),
-    inset -28px  0   60px rgba(0, 0, 0, 0.48);
-  padding: 10px;
+  overflow: hidden;
+  contain: layout;
+  box-shadow: inset 6px 4px 12px 0px rgba(74, 13, 25, 0.5), -6px -5px 5px 0px rgba(108, 51, 73, 0.5), -5px -4px 6px 0px rgba(134, 45, 62, 0.6);
+  color: rgba(86, 11, 11, 1);
+  vertical-align: middle;
+  padding: 0;
   position: relative;
 }
 
@@ -74,13 +82,21 @@ body {
    ============================================================ */
 .recessed-screen {
   background: #050505;
-  border-radius: 14px;
+  border-radius: 20px;
   box-shadow:
-    inset 8px 8px 24px rgba(0, 0, 0, 0.9),
-    inset -4px -4px 12px rgba(255, 255, 255, 0.04),
+    inset 60px 60px 100px rgba(0, 0, 0, 0.95),
+    inset -30px -30px 80px rgba(255, 255, 255, 0.2),
     0 0 0 2px rgba(0, 0, 0, 0.7);
   position: relative;
   overflow: hidden;
+}
+
+/* Flat variant — for small slots where the default 60px vignette dominates */
+.recessed-screen.flat {
+  box-shadow:
+    inset 4px 4px 12px rgba(0, 0, 0, 0.6),
+    inset -2px -2px 8px rgba(255, 255, 255, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.5);
 }
 
 /* CRT Scanline overlay */
@@ -97,7 +113,23 @@ body {
   );
   pointer-events: none;
   z-index: 5;
-  border-radius: 14px;
+  border-radius: 20px;
+}
+
+/* Character card variant — rounded pill corners */
+.recessed-screen.char-slot,
+.recessed-screen.char-slot::after {
+  border-radius: 50px;
+}
+
+/* Suppress layout-flash on mount: content fades in after ~5 frames to cover aspect-ratio relayout */
+.recessed-screen.char-slot .relative {
+  animation: slot-content-in 1ms 80ms both;
+}
+
+@keyframes slot-content-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* Green phosphor glow tint for main feed screens */
@@ -115,73 +147,236 @@ body {
   border-radius: 14px;
 }
 
+/* Character slot overlay button (select witness) */
+.char-slot .char-slot-overlay {
+  box-sizing: content-box;
+  border: 0;
+  border-color: transparent;
+  border-image: none;
+  background: unset;
+  background-color: unset;
+  background-image: none;
+}
+
+.char-slot .char-slot-overlay:hover {
+  background: unset;
+  background-image: none;
+}
+
 /* ============================================================
-   OVAL BUTTON — Tactile hardware buttons
+   ARCADE BUTTON — Vintage dome buttons with 3D volume
+   Round, raised, with specular highlight and press depth.
    ============================================================ */
-.oval-btn {
-  font-family: 'Amarante', serif;
-  font-size: 1rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+.arcade-btn {
+  border-radius: 50%;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  border: none;
-  border-radius: 50px;
-  padding: 0.6em 1.8em;
   position: relative;
-  transition: transform 80ms ease, box-shadow 80ms ease;
   user-select: none;
+  outline: none;
+  transition: transform 100ms ease, box-shadow 100ms ease, filter 100ms ease;
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(198, 88, 88, 1);
 }
 
-.oval-btn:active {
-  transform: translateY(4px);
+/* Pressed state — dome sinks into housing */
+.arcade-btn:active {
+  transform: translateY(5px);
+}
+
+/* Hover glow ring */
+.arcade-btn:hover {
+  filter: brightness(1.12);
+}
+
+/* Icon embedded in the dome surface */
+.arcade-btn-icon {
+  width: 38%;
+  height: 38%;
+  position: relative;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ── Sizes ────────────────────────────────────── */
+
+.arcade-btn-sm {
+  width: clamp(30px, 4.5vmin, 55px);
+  height: clamp(30px, 4.5vmin, 55px);
+}
+
+.arcade-btn-md {
+  width: clamp(38px, 5.5vmin, 68px);
+  height: clamp(38px, 5.5vmin, 68px);
+}
+
+.arcade-btn-lg {
+  width: clamp(55px, 8vmin, 100px);
+  height: clamp(55px, 8vmin, 100px);
+}
+
+/* ── Red variant ──────────────────────────────── */
+.arcade-btn-red {
+  background: radial-gradient(circle at 50% 50%, rgba(157, 32, 57, 1) 60%, rgba(44, 7, 29, 1) 100%);
+  border: none;
   box-shadow:
-    0 2px 0px rgba(0, 0, 0, 0.5),
-    inset -8px -8px 18px rgba(0, 0, 0, 0.8) !important;
+    2px 4px 4px 2px rgba(8, 20, 35, 0.8),
+    inset 3px -5px 4px 2px rgba(46, 5, 23, 0.6),
+    inset -4px 6px 4px 3px rgba(229, 81, 31, 0.7);
 }
 
-/* Red variant — default console action */
-.oval-btn-red {
-  background: linear-gradient(145deg, #e8294d, #a0102a);
-  color: #fff;
-  border: 2px solid #6a0018;
+.arcade-btn-red:hover {
+  background: radial-gradient(circle at 50% 50%, rgba(200, 50, 75, 1) 60%, rgba(60, 10, 35, 1) 100%);
   box-shadow:
-    0 6px 0px rgba(0, 0, 0, 0.5),
-    inset -12px -12px 25px rgba(0, 0, 0, 0.8),
-    inset 6px 6px 15px rgba(255, 100, 120, 0.3);
+    2px 4px 4px 2px rgba(8, 5, 5, 1),
+    inset 3px -5px 4px 2px rgba(70, 8, 30, 0.6),
+    inset -4px 6px 4px 3px rgba(255, 110, 50, 0.7);
 }
 
-.oval-btn-red:hover {
-  background: linear-gradient(145deg, #f03356, #b5152f);
-}
-
-/* Purple variant — archive/selection */
-.oval-btn-purple {
-  background: linear-gradient(145deg, #7a44e8, #3d1a99);
-  color: #fff;
-  border: 2px solid #2a0d6a;
+.arcade-btn-red:active {
   box-shadow:
-    0 6px 0px rgba(0, 0, 0, 0.5),
-    inset -12px -12px 25px rgba(0, 0, 0, 0.8),
-    inset 6px 6px 15px rgba(140, 80, 255, 0.3);
+    1px 2px 2px 1px rgba(8, 5, 5, 1),
+    inset 2px -3px 3px 1px rgba(60, 8, 25, 0.5),
+    inset 0px 2px 2px 0px rgba(200, 80, 30, 0.5);
 }
 
-.oval-btn-purple:hover {
-  background: linear-gradient(145deg, #8a54f8, #4e2ab0);
+.arcade-btn-red .arcade-btn-icon {
+  fill: rgba(60, 0, 20, 0.35);
+  stroke: rgba(255, 180, 180, 0.25);
+  stroke-width: 0.5;
+  filter: drop-shadow(0 1px 0 rgba(255, 150, 100, 0.18));
+  opacity: 0;
 }
 
-/* Green variant — execute/confirm */
-.oval-btn-green {
-  background: linear-gradient(145deg, #2ab84a, #0e6622);
-  color: #fff;
-  border: 2px solid #0a3d16;
+/* ── Purple variant ───────────────────────────── */
+.arcade-btn-purple {
+  background: radial-gradient(circle at 50% 50%, rgba(56, 81, 204, 1) 60%, rgba(29, 35, 114, 1) 100%);
+  border: none;
   box-shadow:
-    0 6px 0px rgba(0, 0, 0, 0.5),
-    inset -12px -12px 25px rgba(0, 0, 0, 0.8),
-    inset 6px 6px 15px rgba(60, 200, 80, 0.3);
+    2px 4px 4px 2px rgba(10, 8, 35, 0.8),
+    inset 3px -5px 4px 0px rgba(25, 15, 90, 0.6),
+    inset -2px 4px 3px 0px rgba(150, 170, 255, 0.7);
 }
 
-.oval-btn-green:hover {
-  background: linear-gradient(145deg, #35d058, #1a8f34);
+.arcade-btn-purple:hover {
+  background: radial-gradient(circle at 50% 50%, rgba(76, 101, 224, 1) 60%, rgba(49, 55, 134, 1) 100%);
+  box-shadow:
+    2px 4px 4px 2px rgba(15, 10, 45, 1),
+    inset 3px -5px 4px 0px rgba(35, 20, 110, 0.6),
+    inset -2px 4px 3px 0px rgba(180, 200, 255, 0.7);
+}
+
+.arcade-btn-purple:active {
+  box-shadow:
+    1px 2px 2px 1px rgba(10, 8, 35, 1),
+    inset 2px -3px 3px 0px rgba(20, 12, 80, 0.5),
+    inset -1px 3px 2px 0px rgba(150, 170, 255, 0.5);
+}
+
+.arcade-btn-purple .arcade-btn-icon {
+  fill: rgba(80, 0, 60, 0.35);
+  stroke: rgba(255, 200, 240, 0.25);
+  stroke-width: 0.5;
+  filter: drop-shadow(0 1px 0 rgba(255, 180, 230, 0.18));
+}
+
+/* ── Pink variant (prev-char nav button) ─────── */
+.arcade-btn-pink {
+  background: radial-gradient(circle at 50% 50%, rgba(180, 34, 93, 1) 60%, rgba(44, 7, 16, 1) 100%);
+  border: none;
+  box-shadow:
+    2px 4px 4px 2px rgba(40, 5, 20, 0.8),
+    inset 3px -5px 4px 0px rgba(110, 20, 55, 0.6),
+    inset -2px 4px 3px 0px rgba(255, 110, 170, 0.7);
+}
+
+.arcade-btn-pink:hover {
+  background: radial-gradient(circle at 50% 50%, rgba(210, 40, 110, 1) 60%, rgba(70, 10, 30, 1) 100%);
+  box-shadow:
+    2px 4px 4px 2px rgba(50, 5, 25, 1),
+    inset 3px -5px 4px 0px rgba(130, 30, 65, 0.6),
+    inset -2px 4px 3px 0px rgba(255, 140, 190, 0.7);
+}
+
+.arcade-btn-pink:active {
+  box-shadow:
+    1px 2px 2px 1px rgba(40, 5, 20, 1),
+    inset 2px -3px 3px 0px rgba(100, 15, 45, 0.5),
+    inset -1px 3px 2px 0px rgba(255, 110, 170, 0.5);
+}
+
+.arcade-btn-pink .arcade-btn-icon {
+  fill: rgba(60, 0, 20, 0.35);
+  stroke: rgba(255, 180, 210, 0.25);
+  stroke-width: 0.5;
+  filter: drop-shadow(0 1px 0 rgba(255, 130, 170, 0.18));
+}
+
+/* ── Orange variant (next-char nav button) ────── */
+.arcade-btn-orange {
+  background: radial-gradient(circle at 50% 50%, rgba(227, 84, 22, 1) 51%, rgba(120, 57, 23, 1) 100%);
+  border: none;
+  box-shadow:
+    2px 4px 4px 2px rgba(80, 53, 48, 1),
+    inset 3px -5px 4px 0px rgba(115, 61, 43, 0.6),
+    inset -2px 4px 3px 0px rgba(232, 135, 44, 0.7);
+}
+
+.arcade-btn-orange:hover {
+  background: radial-gradient(circle at 50% 50%, rgba(247, 104, 42, 1) 51%, rgba(150, 77, 33, 1) 100%);
+  box-shadow:
+    2px 4px 4px 2px rgba(90, 63, 53, 1),
+    inset 3px -5px 4px 0px rgba(135, 81, 53, 0.6),
+    inset -2px 4px 3px 0px rgba(252, 155, 64, 0.7);
+}
+
+.arcade-btn-orange:active {
+  box-shadow:
+    1px 2px 3px 1px rgba(80, 53, 48, 1),
+    inset 2px -3px 3px 0px rgba(115, 61, 43, 0.5),
+    inset -1px 3px 2px 0px rgba(232, 135, 44, 0.5);
+}
+
+.arcade-btn-orange .arcade-btn-icon {
+  fill: rgba(50, 15, 0, 0.35);
+  stroke: rgba(255, 200, 150, 0.25);
+  stroke-width: 0.5;
+  filter: drop-shadow(0 1px 0 rgba(255, 180, 100, 0.18));
+}
+
+/* ── Green variant ────────────────────────────── */
+.arcade-btn-green {
+  background: radial-gradient(circle at 50% 50%, rgba(34, 180, 72, 1) 60%, rgba(10, 61, 22, 1) 100%);
+  border: none;
+  box-shadow:
+    2px 4px 4px 2px rgba(5, 30, 12, 1),
+    inset 3px -5px 4px 0px rgba(15, 80, 35, 0.6),
+    inset -2px 4px 3px 0px rgba(80, 220, 130, 0.7);
+}
+
+.arcade-btn-green:hover {
+  background: radial-gradient(circle at 50% 50%, rgba(54, 210, 92, 1) 60%, rgba(20, 80, 35, 1) 100%);
+  box-shadow:
+    2px 4px 4px 2px rgba(5, 30, 12, 1),
+    inset 3px -5px 4px 0px rgba(25, 100, 50, 0.6),
+    inset -2px 4px 3px 0px rgba(110, 250, 160, 0.7);
+}
+
+.arcade-btn-green:active {
+  box-shadow:
+    1px 2px 2px 1px rgba(5, 30, 12, 1),
+    inset 2px -3px 3px 0px rgba(15, 80, 35, 0.5),
+    inset -1px 3px 2px 0px rgba(80, 220, 130, 0.5);
+}
+
+.arcade-btn-green .arcade-btn-icon {
+  fill: rgba(0, 40, 10, 0.35);
+  stroke: rgba(180, 255, 200, 0.25);
+  stroke-width: 0.5;
+  filter: drop-shadow(0 1px 0 rgba(100, 255, 150, 0.18));
 }
 
 /* ============================================================

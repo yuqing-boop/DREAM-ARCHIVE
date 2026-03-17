@@ -2,47 +2,46 @@ import OvalButton from '../ui/OvalButton'
 
 /**
  * NavCluster
- * Persistent bottom-right navigation controls.
+ * Persistent bottom-right navigation controls — round arcade buttons.
  * Renders only the buttons whose handlers are provided.
- *
- * Props:
- *   onBack   — fires when the Back button is pressed
- *   onNext   — fires when the Next / Verdict button is pressed
- *   onRestart — fires when the Restart button is pressed (Finale only)
- *   nextLabel — override the default "Next" label
- *   backLabel — override the default "Back" label
- *   disableNext — greys out the Next button
+ * 2×2 grid: [prevChar, nextChar / back, next] with optional restart above.
  */
 export default function NavCluster({
   onBack,
   onNext,
   onRestart,
-  nextLabel = 'Next',
-  backLabel = 'Back',
+  onPrevChar,
+  onNextChar,
   disableNext = false,
 }) {
   return (
-    <div className="absolute bottom-5 right-6 flex items-center gap-3 z-20">
+    <div className="absolute flex flex-col items-end z-20" style={{ bottom: 'calc(3% + 10px)', right: 'calc(3% + 20px)', gap: '1.2vmin' }}>
       {onRestart && (
-        <OvalButton variant="purple" onClick={onRestart} className="text-sm px-5">
-          Restart
-        </OvalButton>
+        <OvalButton variant="purple" icon="restart" onClick={onRestart} />
       )}
-      {onBack && (
-        <OvalButton variant="purple" onClick={onBack} className="text-sm px-5">
-          {backLabel}
-        </OvalButton>
-      )}
-      {onNext && (
-        <OvalButton
-          variant="green"
-          onClick={onNext}
-          disabled={disableNext}
-          className="text-sm px-5"
-        >
-          {nextLabel}
-        </OvalButton>
-      )}
+      <div className="grid grid-cols-2" style={{ gap: '0.8vmin' }}>
+        {onPrevChar && (
+          <OvalButton variant="pink" size="sm" onClick={onPrevChar} />
+        )}
+        {onNextChar && (
+          <OvalButton variant="orange" size="sm" onClick={onNextChar} />
+        )}
+        {onBack && (
+          <OvalButton
+            variant="purple"
+            size="sm"
+            onClick={onBack}
+          />
+        )}
+        {onNext && (
+          <OvalButton
+            variant="green"
+            size="sm"
+            onClick={onNext}
+            disabled={disableNext}
+          />
+        )}
+      </div>
     </div>
   )
 }

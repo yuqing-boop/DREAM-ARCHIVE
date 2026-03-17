@@ -5,9 +5,9 @@
  * Consistency Rule: always uses the same shadow logic to maintain the
  * "molded plastic" illusion.
  */
-export default function ScreenLip({ children, className = '' }) {
+export default function ScreenLip({ children, className = '', style }) {
   return (
-    <div className={`screen-lip ${className}`}>
+    <div className={`screen-lip ${className}`} style={style}>
       {children}
     </div>
   )

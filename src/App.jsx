@@ -1,5 +1,6 @@
 import { useGameState } from './hooks/useGameState'
 import Landing       from './components/stages/Landing'
+import IntroVideo    from './components/stages/IntroVideo'
 import SelectionGrid from './components/stages/SelectionGrid'
 import StoryConsole  from './components/stages/StoryConsole'
 import Finale        from './components/stages/Finale'
@@ -14,9 +15,13 @@ export default function App() {
     stage,
     selectedChar,
     collected,
+    collectedIds,
+    goToIntro,
     goToSelection,
+    goToLanding,
     selectCharacter,
     collectAndFinish,
+    addToCollected,
     prevCharacter,
     nextCharacter,
     backToSelection,
@@ -25,13 +30,23 @@ export default function App() {
 
   switch (stage) {
     case 'landing':
-      return <Landing onStart={goToSelection} />
+      return <Landing onStart={goToIntro} />
+
+    case 'intro':
+      return (
+        <IntroVideo
+          onComplete={goToSelection}
+          onSkip={goToSelection}
+          onHome={goToLanding}
+        />
+      )
 
     case 'selection':
       return (
         <SelectionGrid
           onSelect={selectCharacter}
           collected={collected}
+          onGoToLanding={goToLanding}
         />
       )
 
@@ -43,6 +58,8 @@ export default function App() {
           onVerdict={collectAndFinish}
           onPrev={prevCharacter}
           onNext={nextCharacter}
+          collectedIds={collectedIds}
+          onCollect={addToCollected}
         />
       )
 
@@ -52,10 +69,11 @@ export default function App() {
           character={selectedChar}
           onBack={backToSelection}
           onRestart={restart}
+          collectedIds={collectedIds}
         />
       )
 
     default:
-      return <Landing onStart={goToSelection} />
+      return <Landing onStart={goToIntro} />
   }
 }

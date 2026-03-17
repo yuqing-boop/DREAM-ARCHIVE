@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+
+Build the UI components first before connecting the stages

@@ -4,253 +4,199 @@
  * Swap placeholder values for real content without touching any component.
  */
 
+/** Landing page — looping background video inside the main slot */
+export const landingVideoUrl = '/videos/landing-loop.mp4'
+
+/** Transition video that plays between Landing and SelectionGrid */
+export const transitionVideoUrl = '/videos/intro-transition.mp4'
+
+/** Shared ending videos — good end if all 5 assets collected, bad end otherwise */
+export const goodEndVideoUrl = '/videos/end-good.mp4'
+export const badEndVideoUrl  = '/videos/end-bad.mp4'
+
 const PLACEHOLDER_IMG  = (seed) => `https://picsum.photos/seed/${seed}/400/400`
 const PLACEHOLDER_WIDE = (seed) => `https://picsum.photos/seed/${seed}/800/450`
 const PLACEHOLDER_ICON = (seed) => `https://picsum.photos/seed/${seed}/80/80`
 
+/** The five shared evidence assets — same on every character's tray */
+export const assetTrayIcons = [
+  { id: 'asset-1', url: '/images/asset-clock.png',   label: 'Clock'  },
+  { id: 'asset-2', url: '/images/asset-candy.png',   label: 'Candy'  },
+  { id: 'asset-3', url: '/images/asset-mask.png',    label: 'Mask'   },
+  { id: 'asset-4', url: '/images/asset-phone.png',   label: 'Phone'  },
+  { id: 'asset-5', url: '/images/asset-teacup.png',  label: 'Teacup' },
+]
+
 export const characters = [
   {
-    id: 'vex',
-    name: 'Vex Morrow',
+    id: 'stern',
+    name: 'Stern Law',
     role: 'The Architect',
-    profileImage: PLACEHOLDER_IMG('vex-profile'),
-    thumbnailImage: PLACEHOLDER_IMG('vex-thumb'),
+    profileImage: '/images/stern-profile.png',
+    thumbnailImage: '/images/stern-thumb.png',
+    previewVideo: '/videos/stern-preview.mp4',
+    decorativeVideo: '/videos/stern-deco-loop.mp4',
 
-    narrativeText: `They say Vex designed half the city's underground transit lines — 
-the other half she simply commandeered. Nobody asks where the blueprints came from anymore. 
-She arrives before dawn and disappears before questions do. Her ledger is meticulous. 
-Her loyalties are not.`,
+    narrativeText: `Suddenly understood. Urgency. Chasing my target, but what was it?`,
 
     mainFeedMedia: {
-      type: 'image',
-      url: PLACEHOLDER_WIDE('vex-main'),
-      alt: 'Vex Morrow — The Architect',
+      type: 'video',
+      url: '/videos/stern-main.mp4',
+      alt: 'Stern Law — The Architect',
     },
 
     thumbnailImages: [
-      { id: 'vex-t1', url: PLACEHOLDER_IMG('vex-t1'), caption: 'Site 7' },
-      { id: 'vex-t2', url: PLACEHOLDER_IMG('vex-t2'), caption: 'The Vault' },
-      { id: 'vex-t3', url: PLACEHOLDER_IMG('vex-t3'), caption: 'North Gate' },
-      { id: 'vex-t4', url: PLACEHOLDER_IMG('vex-t4'), caption: 'Substation' },
+      { id: 'stern-t1', type: 'video', url: '/videos/stern-t1.mp4', caption: 'Site 7' },
+      { id: 'stern-t2', type: 'video', url: '/videos/stern-t2.mp4', caption: 'The Vault' },
+      { id: 'stern-t3', type: 'video', url: '/videos/stern-t3.mp4', caption: 'North Gate' },
+      { id: 'stern-t4', type: 'video', url: '/videos/stern-t4.mp4', caption: 'Substation' },
     ],
 
-    assetTrayIcons: [
-      { id: 'vex-a1', url: PLACEHOLDER_ICON('vex-icon1'), label: 'Blueprint' },
-      { id: 'vex-a2', url: PLACEHOLDER_ICON('vex-icon2'), label: 'Keycard' },
-      { id: 'vex-a3', url: PLACEHOLDER_ICON('vex-icon3'), label: 'Transit Map' },
-      { id: 'vex-a4', url: PLACEHOLDER_ICON('vex-icon4'), label: 'Cipher' },
-      { id: 'vex-a5', url: PLACEHOLDER_ICON('vex-icon5'), label: 'Lens' },
-    ],
+    unlocksAssetIndex: 0,
 
     ending: 'good',
     endingMedia: {
       type: 'image',
-      url: PLACEHOLDER_WIDE('vex-end-good'),
-      alt: 'Vex walks free',
+      url: PLACEHOLDER_WIDE('stern-end-good'),
+      alt: 'Stern walks free',
     },
   },
 
   {
-    id: 'lorne',
-    name: 'Lorne Ashby',
+    id: 'slink',
+    name: 'Sly & Flash Slink',
     role: 'The Fixer',
-    profileImage: PLACEHOLDER_IMG('lorne-profile'),
-    thumbnailImage: PLACEHOLDER_IMG('lorne-thumb'),
+    profileAspectClass: 'aspect-[4/3]',
+    profileImage: '/images/slink-profile.png',
+    thumbnailImage: '/images/slink-thumb.png',
+    previewVideo: '/videos/slink-preview.mp4',
+    decorativeVideo: '/videos/slink-deco-loop.mp4',
 
-    narrativeText: `Lorne never broke a contract — he simply renegotiated them on the fly, 
-in the dark, at gunpoint if necessary. His philosophy: every lock has a price, every person 
-has a weakness, and every witness has an expiry date. He smells of motor oil and old money.`,
+    narrativeText: `So close. Stealing in secret, then looting in the open. Fighting over a bag of sugar... was it that important?`,
 
     mainFeedMedia: {
-      type: 'image',
-      url: PLACEHOLDER_WIDE('lorne-main'),
-      alt: 'Lorne Ashby — The Fixer',
+      type: 'video',
+      url: '/videos/slink-main.mp4',
+      alt: 'Sly & Flash Slink — The Fixer',
     },
 
     thumbnailImages: [
-      { id: 'lorne-t1', url: PLACEHOLDER_IMG('lorne-t1'), caption: 'Garage' },
-      { id: 'lorne-t2', url: PLACEHOLDER_IMG('lorne-t2'), caption: 'The Docks' },
-      { id: 'lorne-t3', url: PLACEHOLDER_IMG('lorne-t3'), caption: 'Pawn Shop' },
-      { id: 'lorne-t4', url: PLACEHOLDER_IMG('lorne-t4'), caption: 'Rooftop' },
+      { id: 'slink-t1', type: 'video', url: '/videos/slink-t1.mp4', caption: 'Garage' },
+      { id: 'slink-t2', type: 'video', url: '/videos/slink-t2.mp4', caption: 'The Docks' },
+      { id: 'slink-t3', type: 'video', url: '/videos/slink-t3.mp4', caption: 'Pawn Shop' },
+      { id: 'slink-t4', type: 'video', url: '/videos/slink-t4.mp4', caption: 'Rooftop' },
     ],
 
-    assetTrayIcons: [
-      { id: 'lorne-a1', url: PLACEHOLDER_ICON('lorne-icon1'), label: 'Wrench' },
-      { id: 'lorne-a2', url: PLACEHOLDER_ICON('lorne-icon2'), label: 'Dossier' },
-      { id: 'lorne-a3', url: PLACEHOLDER_ICON('lorne-icon3'), label: 'Burner' },
-      { id: 'lorne-a4', url: PLACEHOLDER_ICON('lorne-icon4'), label: 'Cuffs' },
-      { id: 'lorne-a5', url: PLACEHOLDER_ICON('lorne-icon5'), label: 'Scanner' },
-    ],
+    unlocksAssetIndex: 1,
 
     ending: 'bad',
     endingMedia: {
       type: 'image',
-      url: PLACEHOLDER_WIDE('lorne-end-bad'),
-      alt: 'Lorne caught at the docks',
+      url: PLACEHOLDER_WIDE('slink-end-bad'),
+      alt: 'Slink caught at the docks',
     },
   },
 
   {
-    id: 'sable',
-    name: 'Sable Quinn',
-    role: 'The Ghost',
-    profileImage: PLACEHOLDER_IMG('sable-profile'),
-    thumbnailImage: PLACEHOLDER_IMG('sable-thumb'),
-
-    narrativeText: `Three governments have declared Sable Quinn officially dead. 
-She finds this convenient. She moves through systems the way smoke moves through a keyhole — 
-nothing holds her, nothing stops her. The only record of her passage is what's missing 
-from the room she just left.`,
-
-    mainFeedMedia: {
-      type: 'image',
-      url: PLACEHOLDER_WIDE('sable-main'),
-      alt: 'Sable Quinn — The Ghost',
-    },
-
-    thumbnailImages: [
-      { id: 'sable-t1', url: PLACEHOLDER_IMG('sable-t1'), caption: 'Embassy' },
-      { id: 'sable-t2', url: PLACEHOLDER_IMG('sable-t2'), caption: 'Archive' },
-      { id: 'sable-t3', url: PLACEHOLDER_IMG('sable-t3'), caption: 'Terminal' },
-      { id: 'sable-t4', url: PLACEHOLDER_IMG('sable-t4'), caption: 'Safe House' },
-    ],
-
-    assetTrayIcons: [
-      { id: 'sable-a1', url: PLACEHOLDER_ICON('sable-icon1'), label: 'Passports' },
-      { id: 'sable-a2', url: PLACEHOLDER_ICON('sable-icon2'), label: 'Transmitter' },
-      { id: 'sable-a3', url: PLACEHOLDER_ICON('sable-icon3'), label: 'Lock Pick' },
-      { id: 'sable-a4', url: PLACEHOLDER_ICON('sable-icon4'), label: 'Flash Drive' },
-      { id: 'sable-a5', url: PLACEHOLDER_ICON('sable-icon5'), label: 'Vial' },
-    ],
-
-    ending: 'good',
-    endingMedia: {
-      type: 'image',
-      url: PLACEHOLDER_WIDE('sable-end-good'),
-      alt: 'Sable vanishes at the border',
-    },
-  },
-
-  {
-    id: 'draft',
-    name: 'Draft Kolov',
+    id: 'meek',
+    name: 'Meek Gore',
     role: 'The Muscle',
-    profileImage: PLACEHOLDER_IMG('draft-profile'),
-    thumbnailImage: PLACEHOLDER_IMG('draft-thumb'),
+    profileImage: '/images/meek-profile.png',
+    thumbnailImage: '/images/meek-thumb.png',
+    previewVideo: '/videos/meek-preview.mp4',
+    decorativeVideo: '/videos/meek-deco-loop.mp4',
 
-    narrativeText: `Draft has been hired, fired, betrayed, and hired again by the same people 
-seven times. He holds no grudges — grudges slow you down. What he does hold is a reinforced 
-steel door that used to be a wall, which he walked through in 1987 and still jokes about 
-at Christmas.`,
+    narrativeText: `A red stain that won't stop spreading, but the clock won't turn back. I am trapped in the After.`,
 
     mainFeedMedia: {
-      type: 'image',
-      url: PLACEHOLDER_WIDE('draft-main'),
-      alt: 'Draft Kolov — The Muscle',
+      type: 'video',
+      url: '/videos/meek-main.mp4',
+      alt: 'Meek Gore — The Muscle',
     },
 
     thumbnailImages: [
-      { id: 'draft-t1', url: PLACEHOLDER_IMG('draft-t1'), caption: 'Gym' },
-      { id: 'draft-t2', url: PLACEHOLDER_IMG('draft-t2'), caption: 'Checkpoint' },
-      { id: 'draft-t3', url: PLACEHOLDER_IMG('draft-t3'), caption: 'Warehouse' },
-      { id: 'draft-t4', url: PLACEHOLDER_IMG('draft-t4'), caption: 'Alley' },
+      { id: 'meek-t1', type: 'video', url: '/videos/meek-t1.mp4', caption: 'Gym' },
+      { id: 'meek-t2', type: 'video', url: '/videos/meek-t2.mp4', caption: 'Checkpoint' },
+      { id: 'meek-t3', type: 'video', url: '/videos/meek-t3.mp4', caption: 'Warehouse' },
+      { id: 'meek-t4', type: 'video', url: '/videos/meek-t4.mp4', caption: 'Alley' },
     ],
 
-    assetTrayIcons: [
-      { id: 'draft-a1', url: PLACEHOLDER_ICON('draft-icon1'), label: 'Radio' },
-      { id: 'draft-a2', url: PLACEHOLDER_ICON('draft-icon2'), label: 'Vest' },
-      { id: 'draft-a3', url: PLACEHOLDER_ICON('draft-icon3'), label: 'Manifest' },
-      { id: 'draft-a4', url: PLACEHOLDER_ICON('draft-icon4'), label: 'Flare' },
-      { id: 'draft-a5', url: PLACEHOLDER_ICON('draft-icon5'), label: 'Chain' },
-    ],
+    unlocksAssetIndex: 2,
 
     ending: 'bad',
     endingMedia: {
       type: 'image',
-      url: PLACEHOLDER_WIDE('draft-end-bad'),
-      alt: 'Draft cornered in the warehouse',
+      url: PLACEHOLDER_WIDE('meek-end-bad'),
+      alt: 'Meek cornered in the warehouse',
     },
   },
 
   {
-    id: 'petra',
-    name: 'Petra Vane',
+    id: 'odd',
+    name: 'Odd Hop',
     role: 'The Broker',
-    profileImage: PLACEHOLDER_IMG('petra-profile'),
-    thumbnailImage: PLACEHOLDER_IMG('petra-thumb'),
+    profileImage: '/images/odd-profile.png',
+    thumbnailImage: '/images/odd-thumb.png',
+    previewVideo: '/videos/odd-preview.mp4',
+    decorativeVideo: '/videos/odd-deco-loop.mp4',
 
-    narrativeText: `Petra doesn't steal things. She creates the conditions under which 
-things become available. Her office is a café table. Her ledger is her memory. 
-She has brokered deals between people who would have shot each other on sight — 
-and usually did, after she'd already been paid and left.`,
+    narrativeText: `Castle becomes forest. Turned around, a crowd was speaking to me at once.
+`,
 
     mainFeedMedia: {
-      type: 'image',
-      url: PLACEHOLDER_WIDE('petra-main'),
-      alt: 'Petra Vane — The Broker',
+      type: 'video',
+      url: '/videos/odd-main.mp4',
+      alt: 'Odd Hop — The Broker',
     },
 
     thumbnailImages: [
-      { id: 'petra-t1', url: PLACEHOLDER_IMG('petra-t1'), caption: 'Café' },
-      { id: 'petra-t2', url: PLACEHOLDER_IMG('petra-t2'), caption: 'Gallery' },
-      { id: 'petra-t3', url: PLACEHOLDER_IMG('petra-t3'), caption: 'Hotel Lobby' },
-      { id: 'petra-t4', url: PLACEHOLDER_IMG('petra-t4'), caption: 'Train Car' },
+      { id: 'odd-t1', type: 'video', url: '/videos/odd-t1.mp4', caption: 'Café' },
+      { id: 'odd-t2', type: 'video', url: '/videos/odd-t2.mp4', caption: 'Gallery' },
+      { id: 'odd-t3', type: 'video', url: '/videos/odd-t3.mp4', caption: 'Hotel Lobby' },
+      { id: 'odd-t4', type: 'video', url: '/videos/odd-t4.mp4', caption: 'Train Car' },
     ],
 
-    assetTrayIcons: [
-      { id: 'petra-a1', url: PLACEHOLDER_ICON('petra-icon1'), label: 'Ledger' },
-      { id: 'petra-a2', url: PLACEHOLDER_ICON('petra-icon2'), label: 'Signet' },
-      { id: 'petra-a3', url: PLACEHOLDER_ICON('petra-icon3'), label: 'Earpiece' },
-      { id: 'petra-a4', url: PLACEHOLDER_ICON('petra-icon4'), label: 'Envelope' },
-      { id: 'petra-a5', url: PLACEHOLDER_ICON('petra-icon5'), label: 'Compact' },
-    ],
+    unlocksAssetIndex: 3,
 
     ending: 'good',
     endingMedia: {
       type: 'image',
-      url: PLACEHOLDER_WIDE('petra-end-good'),
-      alt: 'Petra departs on the night train',
+      url: PLACEHOLDER_WIDE('odd-end-good'),
+      alt: 'Odd departs on the night train',
     },
   },
 
   {
-    id: 'rook',
-    name: 'Rook Delacey',
+    id: 'drowse',
+    name: 'Drowse Heal',
     role: 'The Wraith',
-    profileImage: PLACEHOLDER_IMG('rook-profile'),
-    thumbnailImage: PLACEHOLDER_IMG('rook-thumb'),
+    profileImage: '/images/drowse-profile.png',
+    thumbnailImage: '/images/drowse-thumb.png',
+    previewVideo: '/videos/drowse-preview.mp4',
+    decorativeVideo: '/videos/drowse-deco-loop.mp4',
 
-    narrativeText: `Rook exists in the margins of surveillance footage — always at the edge 
-of frame, face turned away, gone before the timestamp catches up. His only known 
-signature is a single playing card left at the scene: the eight of spades. 
-Nobody knows why. He might not, either.`,
+    narrativeText: `Floating, detached. Something happens nearby, but I refuse to turn my head.`,
 
     mainFeedMedia: {
-      type: 'image',
-      url: PLACEHOLDER_WIDE('rook-main'),
-      alt: 'Rook Delacey — The Wraith',
+      type: 'video',
+      url: '/videos/drowse-main.mp4',
+      alt: 'Drowse Heal — The Wraith',
     },
 
     thumbnailImages: [
-      { id: 'rook-t1', url: PLACEHOLDER_IMG('rook-t1'), caption: 'Casino' },
-      { id: 'rook-t2', url: PLACEHOLDER_IMG('rook-t2'), caption: 'Roof' },
-      { id: 'rook-t3', url: PLACEHOLDER_IMG('rook-t3'), caption: 'Corridor' },
-      { id: 'rook-t4', url: PLACEHOLDER_IMG('rook-t4'), caption: 'Exit' },
+      { id: 'drowse-t1', type: 'video', url: '/videos/drowse-t1.mp4', caption: 'Casino' },
+      { id: 'drowse-t2', type: 'video', url: '/videos/drowse-t2.mp4', caption: 'Roof' },
+      { id: 'drowse-t3', type: 'video', url: '/videos/drowse-t3.mp4', caption: 'Corridor' },
+      { id: 'drowse-t4', type: 'video', url: '/videos/drowse-t4.mp4', caption: 'Exit' },
     ],
 
-    assetTrayIcons: [
-      { id: 'rook-a1', url: PLACEHOLDER_ICON('rook-icon1'), label: 'Card' },
-      { id: 'rook-a2', url: PLACEHOLDER_ICON('rook-icon2'), label: 'Wire' },
-      { id: 'rook-a3', url: PLACEHOLDER_ICON('rook-icon3'), label: 'Lighter' },
-      { id: 'rook-a4', url: PLACEHOLDER_ICON('rook-icon4'), label: 'Monocle' },
-      { id: 'rook-a5', url: PLACEHOLDER_ICON('rook-icon5'), label: 'Smoke Can' },
-    ],
+    unlocksAssetIndex: 4,
 
     ending: 'bad',
     endingMedia: {
       type: 'image',
-      url: PLACEHOLDER_WIDE('rook-end-bad'),
-      alt: 'Rook identified on security tape',
+      url: PLACEHOLDER_WIDE('drowse-end-bad'),
+      alt: 'Drowse identified on security tape',
     },
   },
 ]
