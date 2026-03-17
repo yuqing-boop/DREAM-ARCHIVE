@@ -1,7 +1,7 @@
 import UnifiedConsole from '../ui/UnifiedConsole'
 import ScreenLip from '../ui/ScreenLip'
 import RecessedScreen from '../ui/RecessedScreen'
-import NavCluster from '../navigation/NavCluster'
+import OvalButton from '../ui/OvalButton'
 import { goodEndVideoUrl, badEndVideoUrl } from '../../data/characters'
 
 /**
@@ -24,7 +24,7 @@ export default function Finale({ onRestart, onBack, collectedIds = [] }) {
     >
 
       {/* Ending video — fills the bulk of the console */}
-      <ScreenLip className="flex-1 min-h-0 flex items-center justify-center">
+      <ScreenLip className="flex-1 min-h-0 flex items-center justify-center m-[30px]">
         <div className="w-[calc(100%-60px)] aspect-[4/3] max-h-[calc(100%-60px)]">
           <RecessedScreen
             phosphor={isGood}
@@ -39,15 +39,16 @@ export default function Finale({ onRestart, onBack, collectedIds = [] }) {
               playsInline
               className="absolute inset-0 w-full h-full object-cover z-10"
             />
+            <div
+              className="absolute z-20 flex flex-col items-center gap-2"
+              style={{ bottom: 'calc(3% + 10px)', right: 'calc(3%)' }}
+            >
+              <OvalButton variant="purple" icon="restart" onClick={onRestart} />
+              <OvalButton variant="purple" size="sm" onClick={onBack} />
+            </div>
           </RecessedScreen>
         </div>
       </ScreenLip>
-
-      {/* Navigation */}
-      <NavCluster
-        onBack={onBack}
-        onRestart={onRestart}
-      />
 
     </UnifiedConsole>
   )

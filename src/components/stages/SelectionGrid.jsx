@@ -14,16 +14,17 @@ export default function SelectionGrid({ onSelect, collected, onGoToLanding }) {
   return (
     <UnifiedConsole className="flex flex-col p-10 gap-4">
 
-      {/* Header stamped on plastic */}
-      <div className="flex justify-end items-center shrink-0">
+      {/* Header — left text + right back button */}
+      <div className="flex justify-between items-center shrink-0 mx-[20px]">
         <span className="font-federo text-xs tracking-widest text-[#e8a0a8] opacity-60 uppercase">
-          Select a Witness
+          Select to Witness
         </span>
+        <OvalButton variant="red" icon="back" onClick={onGoToLanding} />
       </div>
 
-      {/* Character grid — fills available space, slots control their own ratio */}
-      <ScreenLip className="flex-1 min-h-0 grid p-2 mx-[50px] scale-95 translate-y-5">
-      <div className="w-full min-h-0 grid grid-cols-3 grid-rows-2 gap-6">
+      {/* Character grid — fills available space */}
+      <ScreenLip className="flex-1 min-h-0 grid !p-[10px] mx-[20px] mb-[40px]">
+        <div className="w-full min-h-0 grid grid-cols-3 grid-rows-2 gap-6">
           {characters.map((char, index) => (
             <CharacterSlot
               key={char.id}
@@ -35,14 +36,6 @@ export default function SelectionGrid({ onSelect, collected, onGoToLanding }) {
           ))}
         </div>
       </ScreenLip>
-
-      {/* Footer — witness count + back-to-landing arcade button */}
-      <div className="shrink-0 flex items-center justify-between px-2">
-        <span className="font-federo text-xs text-[#e8a0a8] opacity-40 tracking-[0.3em] uppercase">
-          {collected?.size ?? 0} of {characters.length} Witnessed
-        </span>
-        <OvalButton variant="red" icon="back" onClick={onGoToLanding} />
-      </div>
 
     </UnifiedConsole>
   )
@@ -88,16 +81,24 @@ function CharacterSlot({ character, isCollected, onSelect, wide }) {
       {/* Gradient overlay */}
       <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 transition-opacity duration-300 group-hover:opacity-0" />
 
-      {/* Collected badge */}
+      {/* Collected badge — 8-pointed star SVG */}
       {isCollected && (
-        <div className="absolute top-2 right-2 z-20 bg-[#1a8f34] text-white text-[10px] font-amarante tracking-widest px-2 py-0.5 rounded-full border border-[#0a3d16]">
-          WITNESSED
+        <div className="absolute top-4 right-4 z-20">
+          <svg width="28" height="28" viewBox="0 0 28 28" aria-label="Witnessed">
+            <polygon
+              points="14,1 16.5,10 25,7 20,14 25,21 16.5,18 14,27 11.5,18 3,21 8,14 3,7 11.5,10"
+              fill="#ee8baf"
+              stroke="#d2446a"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
+            />
+          </svg>
         </div>
       )}
 
       {/* Name label */}
       <div className="absolute bottom-0 left-0 right-0 z-20 p-3 text-center transition-transform duration-300 group-hover:translate-y-full">
-        <p className="font-amarante text-base text-white leading-tight tracking-wide drop-shadow-lg">
+        <p className="font-amarante text-base text-[#ee8baf] leading-tight tracking-wide drop-shadow-lg">
           {character.name}
         </p>
       </div>

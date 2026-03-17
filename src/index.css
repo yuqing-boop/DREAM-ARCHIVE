@@ -396,14 +396,14 @@ body {
   text-shadow:
     0 1px 0 rgba(255, 255, 255, 0.35),
     0 -2px 4px rgba(0, 0, 0, 0.8);
-  color: #ffe8ec;
+  color: #e692b1;
 }
 
 /* Glowing label text inside recessed screens */
 .screen-label {
   font-family: 'Federo', sans-serif;
-  color: #c8f0c8;
-  text-shadow: 0 0 8px rgba(26, 200, 60, 0.6);
+  color: #ee8baf;
+  text-shadow: 0 0 8px rgba(238, 139, 175, 0.6);
 }
 
 /* ============================================================

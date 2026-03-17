@@ -106,9 +106,6 @@ export default function StoryConsole({
           <h2 className="console-title text-[clamp(14px,2.5vmin,30px)] tracking-wide leading-tight">
             {character.name}
           </h2>
-          <p className="font-federo text-[clamp(8px,1.2vmin,14px)] tracking-widest text-[#c8f0c8] uppercase mt-1">
-            {character.role}
-          </p>
         </div>
 
       </div>
@@ -140,7 +137,7 @@ export default function StoryConsole({
                 <p className="screen-label text-[10px] tracking-[0.35em] uppercase mb-3 opacity-70 text-center">
                   — DREAM NOTE —
                 </p>
-                <p className="font-federo text-[clamp(8px,1.2vmin,14px)] text-[#d8f0d8] leading-relaxed whitespace-pre-line mt-[2vmin]">
+                <p className="font-federo text-[clamp(8px,1.2vmin,14px)] text-[#e692b1] leading-relaxed whitespace-pre-line mt-[2vmin]">
                   {activeAsset ? (
                     <>
                       {typedText}
