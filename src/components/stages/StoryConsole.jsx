@@ -336,8 +336,10 @@ function ThumbnailSlot({ thumb, avatarSrc, avatarAlt, unlocked }) {
   const handleClick = () => { if (unlocked) setRevealed((r) => !r) }
 
   // Keep video playing regardless of reveal state
+  // Imperatively set muted to work around React's known bug with the muted attribute
   useEffect(() => {
     if (videoRef.current) {
+      videoRef.current.muted = true
       videoRef.current.play().catch(() => {})
     }
   }, [])
