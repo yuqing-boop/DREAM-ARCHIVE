@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react'
 import UnifiedConsole from '../ui/UnifiedConsole'
 import ScreenLip from '../ui/ScreenLip'
 import RecessedScreen from '../ui/RecessedScreen'
@@ -12,6 +13,12 @@ import { goodEndVideoUrl, badEndVideoUrl } from '../../data/characters'
 export default function Finale({ onRestart, onBack, collectedIds = [] }) {
   const isGood = collectedIds.length === 5
   const videoSrc = isGood ? goodEndVideoUrl : badEndVideoUrl
+  const videoRef = useRef(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+
+  const handlePlay = () => {
+    videoRef.current?.play()
+  }
 
   return (
     <UnifiedConsole
@@ -32,13 +39,23 @@ export default function Finale({ onRestart, onBack, collectedIds = [] }) {
           >
             <video
               key={videoSrc}
+              ref={videoRef}
               src={videoSrc}
-              autoPlay
               loop
-              muted
               playsInline
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
               className="absolute inset-0 w-full h-full object-cover z-10"
             />
+
+            {/* Play button — visible until user starts playback */}
+            {!isPlaying && (
+              <div className="absolute bottom-5 left-0 right-0 flex justify-center z-20">
+                <OvalButton variant="red" size="sm" icon="play" onClick={handlePlay} />
+              </div>
+            )}
+
+            {/* Navigation buttons */}
             <div
               className="absolute z-20 flex flex-col items-center gap-2"
               style={{ bottom: 'calc(3% + 10px)', right: 'calc(3%)' }}
