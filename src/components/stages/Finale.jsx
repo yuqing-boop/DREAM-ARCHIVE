@@ -41,7 +41,6 @@ export default function Finale({ onRestart, onBack, collectedIds = [] }) {
               key={videoSrc}
               ref={videoRef}
               src={videoSrc}
-              loop
               playsInline
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
