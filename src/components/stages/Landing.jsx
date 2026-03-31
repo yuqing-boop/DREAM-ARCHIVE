@@ -13,19 +13,9 @@ export default function Landing({ onStart }) {
   return (
     <UnifiedConsole className="flex flex-col items-center justify-between p-10">
 
-      {/* Top badge — stamped on plastic */}
-      <div className="w-full flex justify-between items-start shrink-0">
-        <span className="font-amarante text-xs tracking-[0.3em] text-[#e8a0a8] uppercase opacity-60">
-          Hardware Rev. D
-        </span>
-        <span className="font-federo text-xs tracking-widest text-[#e8a0a8] opacity-60">
-          UNIFIED CONSOLE
-        </span>
-      </div>
-
       {/* Central display — full-fill looping video slot */}
-      <ScreenLip className="w-full flex-1 min-h-0 my-6 flex items-center justify-center">
-        <div className="w-full aspect-video max-h-full">
+      <ScreenLip className="w-full flex-1 min-h-0 my-6 flex items-center justify-center !p-[10px] box-border">
+        <div className="w-full aspect-video max-h-full min-h-0">
           <RecessedScreen phosphor className="w-full h-full relative overflow-hidden">
 
             {/* Looping background video — fills the slot */}
