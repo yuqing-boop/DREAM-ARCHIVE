@@ -38,7 +38,7 @@ export default function UnifiedConsole({ children, className = '', style }) {
     const offscreen = document.createElement('canvas')
     offscreen.width  = SMALL_W
     offscreen.height = SMALL_H
-    const octx = offscreen.getContext('2d')
+    const octx = offscreen.getContext('2d', { willReadFrequently: true })
 
     // Keep display canvas pixel dimensions in sync with its CSS layout size
     const syncSize = () => {
