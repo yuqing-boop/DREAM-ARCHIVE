@@ -91,7 +91,7 @@ export default function IntroVideo({ onComplete, onSkip, onHome }) {
 
         {/* Progress track */}
         <div
-          className="flex-1 h-3 rounded-full cursor-pointer overflow-hidden shrink"
+          className="flex-1 h-3 rounded-full overflow-hidden shrink"
           style={{
             background: 'rgba(0,0,0,0.55)',
             boxShadow: 'inset 2px 2px 6px rgba(0,0,0,0.9), inset -1px -1px 3px rgba(255,255,255,0.06)',

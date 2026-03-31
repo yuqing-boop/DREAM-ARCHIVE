@@ -186,7 +186,7 @@ export default function StoryConsole({
                 style={{ width: '20px', height: '20px' }}
               />
               <div
-                className="flex-1 h-2 rounded-full cursor-pointer overflow-hidden"
+                className="flex-1 h-2 rounded-full overflow-hidden"
                 style={{
                   background: 'rgba(0,0,0,0.55)',
                   boxShadow: 'inset 2px 2px 6px rgba(0,0,0,0.9), inset -1px -1px 3px rgba(255,255,255,0.06)',
@@ -350,7 +350,7 @@ function ThumbnailSlot({ thumb, avatarSrc, avatarAlt, unlocked }) {
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
       onClick={handleClick}
-      style={{ cursor: unlocked ? 'pointer' : 'default' }}
+      style={{ cursor: 'inherit' }}
     >
       {/* Video layer — always present beneath, loop + muted */}
       {thumb.type === 'video' ? (
@@ -403,7 +403,7 @@ function AssetIcon({ icon, isLit, isActive, onClick }) {
       className="flex flex-col items-center gap-1 shrink-0 select-none"
       onClick={isLit ? onClick : undefined}
       style={{
-        cursor: isLit ? 'pointer' : 'default',
+        cursor: 'inherit',
         filter: isLit
           ? 'grayscale(0) brightness(1.2) drop-shadow(0 0 10px red)'
           : 'grayscale(1) brightness(0.5)',

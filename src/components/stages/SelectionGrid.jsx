@@ -54,7 +54,7 @@ function CharacterSlot({ character, isCollected, onSelect, wide }) {
 
   return (
     <RecessedScreen
-      className={`w-full relative group cursor-pointer overflow-hidden char-slot${wide ? ' col-span-2' : ''}`}
+      className={`w-full relative group overflow-hidden char-slot${wide ? ' col-span-2' : ''}`}
       phosphor={false}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

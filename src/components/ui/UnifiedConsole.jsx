@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react'
+import { PC98Engine } from '../../PC98_VisualEngine'
 
 /**
  * UnifiedConsole
@@ -70,6 +71,11 @@ export default function UnifiedConsole({ children, className = '', style }) {
       octx.clip()
       octx.drawImage(video, 0, 0, SMALL_W, SMALL_H)
       octx.restore()
+
+      // ── PC98 pixel filter on the clipped offscreen frame ─────────────
+      const frame = octx.getImageData(0, 0, SMALL_W, SMALL_H)
+      PC98Engine.processImageData(frame, { palette: 'pc98', pattern: 'bayer4', strength: 40 })
+      octx.putImageData(frame, 0, 0)
 
       // ── Display canvas: upscale with nearest-neighbour ───────────────
       // imageSmoothingEnabled resets to true whenever canvas dimensions
