@@ -78,7 +78,8 @@ export default function StoryConsole({
   }, [activeAsset, character?.narrativeText])
 
   const handleAssetClick = (iconId, idx) => {
-    if (!unlockedAssetIndices.has(idx)) return
+    if (!isCollected) return
+    if (idx !== character?.unlocksAssetIndex) return
     setActiveAsset(iconId)
   }
 
