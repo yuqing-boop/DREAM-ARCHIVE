@@ -4,6 +4,7 @@ import IntroVideo    from './components/stages/IntroVideo'
 import SelectionGrid from './components/stages/SelectionGrid'
 import StoryConsole  from './components/stages/StoryConsole'
 import Finale        from './components/stages/Finale'
+import GuideStar     from './components/GuideStar'
 
 /**
  * App — Central Stage Switcher
@@ -28,30 +29,34 @@ export default function App() {
     restart,
   } = useGameState()
 
+  let stageEl
   switch (stage) {
     case 'landing':
-      return <Landing onStart={goToIntro} />
+      stageEl = <Landing onStart={goToIntro} />
+      break
 
     case 'intro':
-      return (
+      stageEl = (
         <IntroVideo
           onComplete={goToSelection}
           onSkip={goToSelection}
           onHome={goToLanding}
         />
       )
+      break
 
     case 'selection':
-      return (
+      stageEl = (
         <SelectionGrid
           onSelect={selectCharacter}
           collected={collected}
           onGoToLanding={goToLanding}
         />
       )
+      break
 
     case 'story':
-      return (
+      stageEl = (
         <StoryConsole
           character={selectedChar}
           onBack={backToSelection}
@@ -62,9 +67,10 @@ export default function App() {
           onCollect={addToCollected}
         />
       )
+      break
 
     case 'finale':
-      return (
+      stageEl = (
         <Finale
           character={selectedChar}
           onBack={backToSelection}
@@ -72,8 +78,16 @@ export default function App() {
           collectedIds={collectedIds}
         />
       )
+      break
 
     default:
-      return <Landing onStart={goToIntro} />
+      stageEl = <Landing onStart={goToIntro} />
   }
+
+  return (
+    <>
+      {stageEl}
+      <GuideStar />
+    </>
+  )
 }

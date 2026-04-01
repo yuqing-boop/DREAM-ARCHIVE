@@ -276,3 +276,207 @@ canvas {
 ::-webkit-scrollbar-thumb:hover {
   background: #C41E3A;
 }
+
+/* ============================================================
+   GUIDE STAR — Floating draggable guide button + panel
+   ============================================================ */
+
+/* Position: react-draggable transform + positionOffset (GuideStar.jsx). Avoid right/bottom + bounds="body". */
+.guide-star-root {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 50;
+  user-select: none;
+  cursor: grab;
+}
+
+/* Cluster: star + overlapping panel (500px asset scales via --guide-star-size) */
+.guide-star-cluster {
+  --guide-star-size: clamp(96px, 22vmin, 500px);
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+
+/* Star button — matches 500×500 asset display size, scales with viewport */
+.guide-star-btn {
+  position: relative;
+  z-index: 2;
+  width: var(--guide-star-size);
+  height: var(--guide-star-size);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter:
+    drop-shadow(0 0 calc(var(--guide-star-size) * 0.012) rgba(254, 88, 149, 0.9))
+    drop-shadow(0 0 calc(var(--guide-star-size) * 0.028) rgba(184, 48, 96, 0.6));
+  transition: filter 0.15s ease, transform 0.1s ease;
+  image-rendering: pixelated;
+}
+
+.guide-star-btn:hover {
+  filter:
+    drop-shadow(0 0 calc(var(--guide-star-size) * 0.02) rgba(254, 88, 149, 1))
+    drop-shadow(0 0 calc(var(--guide-star-size) * 0.044) rgba(255, 140, 180, 0.8));
+  transform: scale(1.06);
+}
+
+.guide-star-btn:active {
+  transform: scale(0.98);
+}
+
+/* First visit — breathing glow (radius pulses) */
+@keyframes guide-star-breathe {
+  0%,
+  100% {
+    filter:
+      drop-shadow(0 0 calc(var(--guide-star-size) * 0.01) rgba(254, 88, 149, 0.75))
+      drop-shadow(0 0 calc(var(--guide-star-size) * 0.024) rgba(184, 48, 96, 0.45));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 calc(var(--guide-star-size) * 0.028) rgba(254, 88, 149, 1))
+      drop-shadow(0 0 calc(var(--guide-star-size) * 0.065) rgba(255, 100, 160, 0.85));
+  }
+}
+
+.guide-star-btn--unseen:not(:hover) {
+  animation: guide-star-breathe 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-star-btn--unseen:not(:hover) {
+    animation: none;
+    filter:
+      drop-shadow(0 0 calc(var(--guide-star-size) * 0.018) rgba(254, 88, 149, 0.9))
+      drop-shadow(0 0 calc(var(--guide-star-size) * 0.04) rgba(184, 48, 96, 0.65));
+  }
+}
+
+.guide-star-img,
+.guide-star-svg {
+  width: 100%;
+  height: auto;
+  max-height: var(--guide-star-size);
+  aspect-ratio: 1;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: block;
+}
+
+/* Guide panel — anchored SE of star; star overlaps top-left */
+.guide-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: min(92vw, max(280px, 40vmin));
+  max-height: min(70vh, 560px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: rgba(8, 4, 22, 0.92);
+  color: #e8a0a8;
+  font-size: clamp(9px, 1.2vmin, 11px);
+  line-height: 1.55;
+  border-radius: 20px;
+  transform: translate(
+    calc(var(--guide-star-size) * 0.2 + 80px),
+    calc(var(--guide-star-size) * 0.2 + 80px)
+  );
+
+  /* Pixel-art border: solid outer + inner highlight */
+  outline: 2px solid #b83060;
+  outline-offset: 0;
+  box-shadow:
+    0 0 0 1px #3a0018,
+    0 0 0 3px #6a1030,
+    inset 0 0 0 1px rgba(254, 88, 149, 0.15),
+    0 8px 32px rgba(0, 0, 0, 0.9),
+    0 0 18px rgba(184, 48, 96, 0.4);
+}
+
+.guide-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 8px 14px 6px;
+  background: rgba(184, 48, 96, 0.25);
+  border-bottom: 1px solid #b83060;
+  border-radius: 20px 20px 0 0;
+}
+
+.guide-title {
+  font-size: clamp(9px, 1.2vmin, 11px);
+  color: #fe5895;
+  letter-spacing: 0.06em;
+  text-shadow:
+    0 1px 0.02px rgba(184, 48, 96, 0.7),
+    2px 2px 0.06px rgba(184, 48, 96, 0.7);
+}
+
+.guide-section {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(184, 48, 96, 0.35);
+}
+
+.guide-section-label {
+  font-size: clamp(8px, 1.1vmin, 10px);
+  color: #fe5895;
+  letter-spacing: 0.08em;
+  margin-bottom: 5px;
+  text-shadow:
+    0 1px 0.02px rgba(184, 48, 96, 0.7),
+    2px 2px 0.06px rgba(184, 48, 96, 0.7);
+}
+
+.guide-body {
+  margin: 0;
+  color: #e8a0a8;
+  white-space: pre-line;
+  font-size: clamp(8px, 1.1vmin, 10px);
+  line-height: 1.6;
+}
+
+/* Controls grid */
+.guide-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.guide-ctrl-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guide-ctrl-btn {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.guide-ctrl-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.guide-ctrl-label {
+  font-size: clamp(8px, 1.05vmin, 10px);
+  color: #fe5895;
+  letter-spacing: 0.04em;
+}
+
+.guide-ctrl-note {
+  font-size: clamp(7px, 1vmin, 9px);
+  color: #a06070;
+}

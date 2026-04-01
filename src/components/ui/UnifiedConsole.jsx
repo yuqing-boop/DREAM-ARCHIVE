@@ -139,7 +139,16 @@ export default function UnifiedConsole({ children, className = '', style }) {
       ctx.drawImage(video, 0, 0, cw, ch)
     }
 
-    rafId = requestAnimationFrame(draw)
+    const startCanvas = () => {
+      video.play().catch((err) => console.warn('[UnifiedConsole] bg video autoplay blocked:', err))
+      rafId = requestAnimationFrame(draw)
+    }
+
+    if (video.readyState >= 1) {
+      startCanvas()
+    } else {
+      video.addEventListener('loadedmetadata', startCanvas, { once: true })
+    }
 
     return () => {
       cancelAnimationFrame(rafId)
@@ -162,11 +171,16 @@ export default function UnifiedConsole({ children, className = '', style }) {
           <video
             ref={videoRef}
             src="/bg-moving.webm"
-            autoPlay
             loop
             muted
             playsInline
-            style={{ display: 'none' }}
+            style={{
+              position: 'absolute',
+              visibility: 'hidden',
+              width: '1px',
+              height: '1px',
+              pointerEvents: 'none',
+            }}
           />
 
           <canvas ref={canvasRef} className="console-bg-canvas" />
