@@ -1,97 +1,44 @@
-import { useState, useRef, useLayoutEffect, useCallback } from 'react'
+import { useState, useRef, useLayoutEffect } from 'react'
 import Draggable from 'react-draggable'
 
 /**
  * GuideStar — Draggable floating guide button
- * Anchor = viewport top-right via positionOffset (gutter beside UnifiedConsole).
- * bounds="body" breaks with position:fixed; use bounds={false}.
+ * Default anchor: centre of star aligned to top-left corner of .unified-console.
+ * Drag accumulates as a transform offset. Resize snaps back to default.
  */
 
 const STORAGE_KEY = 'dream-archive-guide-opened'
 
-/** Match CSS: clamp(96px, 22vmin, 500px) */
 function starSizePx() {
   const vmin = Math.min(window.innerWidth, window.innerHeight) / 100
   return Math.min(500, Math.max(96, 22 * vmin))
 }
 
-function marginPx() {
-  const vmin = Math.min(window.innerWidth, window.innerHeight) / 100
-  return Math.max(12, 2 * vmin)
-}
-
-/** Top-right of viewport; nudge if overlapping .unified-console + 80px pad */
-function computeGuideStarOffset() {
-  const w = window.innerWidth
-  const h = window.innerHeight
-  const size = starSizePx()
-  const m = marginPx()
-
-  let x = w - size - m - 50
-  let y = m - 80
-
+function computeAnchor() {
   const el = document.querySelector('.unified-console')
-  if (!el) {
-    return {
-      x: Math.round(Math.min(Math.max(0, x), w - size)),
-      y: Math.round(Math.min(Math.max(0, y), h - size)),
-    }
+  if (!el) return { top: 0, left: 0 }
+  const rect = el.getBoundingClientRect()
+  const half = starSizePx() / 2
+  return {
+    top: Math.round(rect.top - half) + 60,
+    left: Math.round(rect.left - half) + 60,
   }
-
-  const u = el.getBoundingClientRect()
-  const pad = 80
-  const zone = {
-    left: u.left - pad,
-    top: u.top - pad,
-    right: u.right + pad,
-    bottom: u.bottom + pad,
-  }
-
-  const overlaps = (ax, ay) =>
-    ax + size > zone.left &&
-    ax < zone.right &&
-    ay + size > zone.top &&
-    ay < zone.bottom
-
-  if (!overlaps(x, y)) {
-    x = Math.min(Math.max(m, x), w - size - m)
-    y = Math.min(Math.max(m, y), h - size - m)
-    return { x: Math.round(x), y: Math.round(y) }
-  }
-
-  // Prefer sliding left along the top (stay in top margin band)
-  const leftOfZone = zone.left - size - m
-  if (leftOfZone >= m && !overlaps(leftOfZone, y)) {
-    x = leftOfZone
-  } else {
-    const belowZone = zone.bottom + m
-    if (belowZone + size <= h - m) {
-      y = belowZone
-      x = w - size - m
-      if (overlaps(x, y) && leftOfZone >= m) {
-        x = leftOfZone
-      }
-    } else {
-      x = Math.max(m, Math.min(w - size - m, zone.left - size - m))
-    }
-  }
-
-  x = Math.min(Math.max(m, x), w - size - m)
-  y = Math.min(Math.max(m, y), h - size - m)
-
-  return { x: Math.round(x), y: Math.round(y) }
 }
 
-const SECTION_LORE = `Dream Archive is a fragment-recovery system. Six characters are suspended in a loop — each holds a piece of a fractured timeline.
+const SECTION_LORE = `You are navigating the fragments of a surreal, forgotten night. To understand what truly happened, you must piece together the scattered memories of five individuals before you lost everything.`
 
-Navigate to each character's profile, read their DREAM NOTE, and collect their Neural Asset to unlock a fragment. Collect all six to reach the FULL SYNC ending.`
+const SECTION_RULES = `1. Watch the Experiences
+Select a character and watch their story unfold. Completing a video will light up their unique Personal Item at the bottom of the screen.
 
-const SECTION_RULES = `1. Start from the HALL OF ROBBERS (selection screen).
-2. Enter any character's console to read their story.
-3. Touch the glowing Asset panel to collect it.
-4. A ★ badge marks characters you've already witnessed.
-5. Collect all 6 Assets → the FINALE unlocks automatically.
-6. You can revisit characters freely — order doesn't matter.`
+2. Unlock 'Meanwhile' Clips
+Once a character's story is complete, a 'Meanwhile' fragment on the right of the screen will be automatically decrypted, revealing what other characters were doing at that exact moment.
+
+3. Collect the Waking Notes
+Click on the illuminated Personal Items to collect the handwritten 'Dream Notes' left behind by each character.
+
+4. Reveal the Final Truth 
+Only by lighting up all five items can you unlock the Grand Storyline and discover the ultimate truth of that night.
+`
 
 function readHasOpenedBefore() {
   try {
@@ -112,30 +59,30 @@ function persistHasOpened() {
 export default function GuideStar() {
   const [open, setOpen] = useState(false)
   const [hasOpenedBefore, setHasOpenedBefore] = useState(readHasOpenedBefore)
-  const [positionOffset, setPositionOffset] = useState(() =>
-    typeof window !== 'undefined' ? computeGuideStarOffset() : { x: 0, y: 0 }
-  )
+  const [dragPos, setDragPos] = useState({ x: 0, y: 0 })
+  const [anchor, setAnchor] = useState({ top: 0, left: 0 })
   const nodeRef = useRef(null)
-
-  const updateOffset = useCallback(() => {
-    setPositionOffset(computeGuideStarOffset())
-  }, [])
+  const didDrag = useRef(false)
 
   useLayoutEffect(() => {
-    updateOffset()
-    window.addEventListener('resize', updateOffset)
-    return () => window.removeEventListener('resize', updateOffset)
-  }, [updateOffset])
-
-  const didDrag = useRef(false)
+    setAnchor(computeAnchor())
+    const onResize = () => {
+      setAnchor(computeAnchor())
+      setDragPos({ x: 0, y: 0 })
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   const handleDrag = (e, data) => {
     if (Math.abs(data.deltaX) > 0 || Math.abs(data.deltaY) > 0) {
       didDrag.current = true
     }
+    setDragPos({ x: data.x, y: data.y })
   }
 
-  const handleStop = () => {
+  const handleStop = (e, data) => {
+    setDragPos({ x: data.x, y: data.y })
     setTimeout(() => {
       didDrag.current = false
     }, 0)
@@ -157,12 +104,15 @@ export default function GuideStar() {
     <Draggable
       nodeRef={nodeRef}
       bounds={false}
-      defaultPosition={{ x: 0, y: 0 }}
-      positionOffset={positionOffset}
+      position={dragPos}
       onDrag={handleDrag}
       onStop={handleStop}
     >
-      <div ref={nodeRef} className="guide-star-root">
+      <div
+        ref={nodeRef}
+        className="guide-star-root"
+        style={{ position: 'fixed', top: anchor.top, left: anchor.left }}
+      >
         <div className="guide-star-cluster">
           <button
             type="button"
@@ -217,39 +167,38 @@ export default function GuideStar() {
                 <span className="guide-title font-pixelify">★ DREAM ARCHIVE GUIDE</span>
               </div>
 
-              <div className="guide-section">
-                <div className="guide-section-label font-pixelify">01 &nbsp;世界觀與故事流程</div>
-                <p className="guide-body">{SECTION_LORE}</p>
-              </div>
+              <div className="guide-panel-scroll">
+                <div className="guide-section">
+                  <div className="guide-section-label font-pixelify">Welcome to the Archive</div>
+                  <p className="guide-body">{SECTION_LORE}</p>
+                </div>
 
-              <div className="guide-section">
-                <div className="guide-section-label font-pixelify">02 &nbsp;遊戲規則</div>
-                <p className="guide-body">{SECTION_RULES}</p>
-              </div>
+                <div className="guide-section">
+                  <div className="guide-section-label font-pixelify">How to Collect Memory Fragments</div>
+                  <p className="guide-body">{SECTION_RULES}</p>
+                </div>
 
-              <div className="guide-section" style={{ borderBottom: 'none' }}>
-                <div className="guide-section-label font-pixelify">03 &nbsp;操作指南</div>
-                <div className="guide-controls">
-                  <ControlRow
-                    img="/buttons/btn-pink-default.png"
-                    label="上一位角色"
-                    note="切換至前一個角色檔案"
-                  />
-                  <ControlRow
-                    img="/buttons/btn-red-default.png"
-                    label="下一位角色"
-                    note="切換至後一個角色檔案"
-                  />
-                  <ControlRow
-                    img="/buttons/btn-blue-default.png"
-                    label="返回"
-                    note="返回角色選擇畫面"
-                  />
-                  <ControlRow
-                    img="/buttons/btn-green-default.png"
-                    label="前進 / 確認"
-                    note="進入故事 / 收集 Asset"
-                  />
+                <div className="guide-section" style={{ borderBottom: 'none' }}>
+                  <div className="guide-section-label font-pixelify">Button Directions(Character Page)</div>
+                  <div className="guide-controls">
+                    <ControlRow
+                      img="/buttons/btn-pink-default.png"
+                      label="Previous Character"
+                    />
+                    <ControlRow
+                      img="/buttons/btn-red-default.png"
+                      label="Next Character"
+                    />
+                    <ControlRow
+                      img="/buttons/btn-blue-default.png"
+                      label="Return to Selection Grid"
+                    />
+                    <ControlRow
+                      img="/buttons/btn-green-default.png"
+                      label="Proceed to End"
+                      note="If you have not collected all 5 items, you will be guided to the false ending."
+                    />
+                  </div>
                 </div>
               </div>
             </div>

@@ -375,10 +375,11 @@ canvas {
   top: 0;
   left: 0;
   z-index: 1;
-  width: min(92vw, max(280px, 40vmin));
+  display: flex;
+  flex-direction: column;
+  width: calc(min(92vw, max(280px, 40vmin)) - 30px);
   max-height: min(70vh, 560px);
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   background: rgba(8, 4, 22, 0.92);
   color: #e8a0a8;
   font-size: clamp(9px, 1.2vmin, 11px);
@@ -400,6 +401,38 @@ canvas {
     0 0 18px rgba(184, 48, 96, 0.4);
 }
 
+/* Scrollbar inset 30px from panel top/bottom (below header / above bottom edge) */
+.guide-panel-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  /* ~12px default + 15px — wider scrollbar (Firefox: auto = system width) */
+  scrollbar-width: auto;
+  scrollbar-color: rgba(184, 48, 96, 0.65) rgba(8, 4, 22, 0.6);
+}
+
+.guide-panel-scroll::-webkit-scrollbar {
+  width: 27px;
+}
+
+.guide-panel-scroll::-webkit-scrollbar-track {
+  background: rgba(8, 4, 22, 0.55);
+  border-radius: 10px;
+}
+
+.guide-panel-scroll::-webkit-scrollbar-thumb {
+  background: rgba(184, 48, 96, 0.55);
+  border-radius: 10px;
+  border: 3px solid rgba(8, 4, 22, 0.55);
+}
+
+.guide-panel-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(254, 88, 149, 0.55);
+}
+
 .guide-header {
   display: flex;
   align-items: center;
@@ -411,7 +444,7 @@ canvas {
 }
 
 .guide-title {
-  font-size: clamp(9px, 1.2vmin, 11px);
+  font-size: 18px;
   color: #fe5895;
   letter-spacing: 0.06em;
   text-shadow:
@@ -425,7 +458,11 @@ canvas {
 }
 
 .guide-section-label {
-  font-size: clamp(8px, 1.1vmin, 10px);
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  font-size: 16px;
   color: #fe5895;
   letter-spacing: 0.08em;
   margin-bottom: 5px;
@@ -438,7 +475,8 @@ canvas {
   margin: 0;
   color: #e8a0a8;
   white-space: pre-line;
-  font-size: clamp(8px, 1.1vmin, 10px);
+  font-family: 'Amarante', serif;
+  font-size: clamp(10px, 1.2vmin, 12px);
   line-height: 1.6;
 }
 
@@ -471,12 +509,12 @@ canvas {
 }
 
 .guide-ctrl-label {
-  font-size: clamp(8px, 1.05vmin, 10px);
+  font-size: 12px;
   color: #fe5895;
   letter-spacing: 0.04em;
 }
 
 .guide-ctrl-note {
-  font-size: clamp(7px, 1vmin, 9px);
+  font-size: 12px;
   color: #a06070;
 }
