@@ -136,7 +136,7 @@ export default function StoryConsole({
             <RecessedScreen flat className="w-full h-full p-[1.5vmin] no-scanlines" style={{ background: '#ce5c82' }}>
               <div className="overflow-y-auto h-full">
                 <p className="font-pixelify text-[20px] tracking-[1px] uppercase mb-3 text-center text-[#e8a0a8] [text-shadow:0_1px_0.02px_rgba(184,48,96,0.7),2px_2px_0.06px_rgba(184,48,96,0.7)]">
-                  — DREAM NOTE —
+                  DREAM NOTE
                 </p>
                 <p className="font-federo text-[clamp(8px,1.2vmin,14px)] text-[#e8a0a8] leading-relaxed whitespace-pre-line mt-[2vmin] [text-shadow:0_1px_0.02px_rgba(184,48,96,0.7),2px_2px_0.06px_rgba(184,48,96,0.7)]">
                   {activeAsset ? (
