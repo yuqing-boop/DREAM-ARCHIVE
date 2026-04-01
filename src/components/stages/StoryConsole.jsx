@@ -103,7 +103,7 @@ export default function StoryConsole({
 
         {/* Title block — stamped on the plastic surface */}
         <div className="flex-1 flex flex-col justify-center px-[1.5%]">
-          <h2 className="console-title text-[clamp(14px,2.5vmin,30px)] tracking-wide leading-tight">
+          <h2 className="console-title tracking-wide leading-tight">
             {character.name}
           </h2>
         </div>
@@ -132,12 +132,12 @@ export default function StoryConsole({
 
           {/* Text panel — static narrative or typewriter when asset is active */}
           <ScreenLip className="flex-1 min-h-0 mt-[2vmin] mb-[30px]" style={{ boxShadow: 'inset 6px 4px 12px 0px rgba(86, 41, 59, 0.5), -6px -5px 5px 0px rgba(74, 33, 47, 0.5), -5px -4px 6px 0px rgba(80, 33, 33, 0.6)' }}>
-            <RecessedScreen flat className="w-full h-full p-[1.5vmin]">
+            <RecessedScreen flat className="w-full h-full p-[1.5vmin] no-scanlines" style={{ background: '#ce5c82' }}>
               <div className="overflow-y-auto h-full">
-                <p className="screen-label text-[10px] tracking-[0.35em] uppercase mb-3 opacity-70 text-center">
+                <p className="font-pixelify text-[20px] tracking-[1px] uppercase mb-3 text-center text-[#e8a0a8] [text-shadow:0_1px_0.02px_rgba(184,48,96,0.7),2px_2px_0.06px_rgba(184,48,96,0.7)]">
                   — DREAM NOTE —
                 </p>
-                <p className="font-federo text-[clamp(8px,1.2vmin,14px)] text-[#e692b1] leading-relaxed whitespace-pre-line mt-[2vmin]">
+                <p className="font-federo text-[clamp(8px,1.2vmin,14px)] text-[#e8a0a8] leading-relaxed whitespace-pre-line mt-[2vmin] [text-shadow:0_1px_0.02px_rgba(184,48,96,0.7),2px_2px_0.06px_rgba(184,48,96,0.7)]">
                   {activeAsset ? (
                     <>
                       {typedText}
@@ -179,7 +179,7 @@ export default function StoryConsole({
           {character.mainFeedMedia?.type === 'video' && (
             <div className="w-full flex items-center gap-3 mt-2 px-1">
               <OvalButton
-                variant="purple"
+                variant="blue"
                 size="sm"
                 icon={isVideoPlaying ? 'pause' : 'play'}
                 onClick={toggleMainVideo}
@@ -241,7 +241,7 @@ export default function StoryConsole({
 
       {/* ── FOOTER — Asset Tray ────────────────────────────────── */}
       <ScreenLip className="shrink-0 h-[calc(18%-20px)] ml-[calc(2.5%+15px)] mr-[22.8%] relative -top-[1%]">
-        <RecessedScreen flat className="w-full h-full" style={{ background: '#ee8baf' }}>
+        <RecessedScreen flat className="w-full h-full no-scanlines" style={{ background: '#ce5c82' }}>
           <div className="flex items-center justify-evenly w-full h-full">
             {assetTrayIcons.map((icon, idx) => (
               <AssetIcon
@@ -366,7 +366,7 @@ function ThumbnailSlot({ thumb, avatarSrc, avatarAlt, unlocked }) {
         <img
           src={thumb.url}
           alt={thumb.caption}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="pixelated-image absolute inset-0 w-full h-full object-cover"
         />
       )}
 
@@ -389,7 +389,9 @@ function ThumbnailSlot({ thumb, avatarSrc, avatarAlt, unlocked }) {
           transition: unlocked ? 'transform 0.3s ease' : 'none',
         }}
       >
-        <p className="font-amarante text-xs text-white leading-tight tracking-wide drop-shadow-lg">
+        <p
+          className="font-pixelify text-base text-[#ee8baf] leading-tight tracking-wide [text-shadow:0_1px_0.02px_rgba(184,48,96,70),2px_2px_0.06px_rgba(184,48,96,70)]"
+        >
           {avatarAlt}
         </p>
       </div>

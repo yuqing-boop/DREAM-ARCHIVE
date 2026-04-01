@@ -30,6 +30,8 @@ export default function CursorBlink() {
       'pointer-events: none',
       'z-index: 99999',
       'transform: translate(-50%, -50%)',
+      'image-rendering: -moz-crisp-edges',
+      'image-rendering: -webkit-optimize-contrast',
       'image-rendering: pixelated',
       'user-select: none',
     ].join(';')

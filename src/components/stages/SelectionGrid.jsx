@@ -63,7 +63,7 @@ function CharacterSlot({ character, isCollected, onSelect, wide }) {
       <img
         src={character.thumbnailImage}
         alt={character.name}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${character.previewVideo ? 'group-hover:opacity-0' : 'group-hover:scale-105 transition-transform'}`}
+        className={`pixelated-image absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${character.previewVideo ? 'group-hover:opacity-0' : 'group-hover:scale-105 transition-transform'}`}
       />
 
       {/* Hover preview video */}
@@ -98,28 +98,18 @@ function CharacterSlot({ character, isCollected, onSelect, wide }) {
 
       {/* Name label */}
       <div className="absolute bottom-0 left-0 right-0 z-20 p-3 text-center transition-transform duration-300 group-hover:translate-y-full">
-        <p className="font-amarante text-base text-[#ee8baf] leading-tight tracking-wide drop-shadow-lg">
+        <p className="font-pixelify text-base text-[#ee8baf] leading-tight tracking-wide [text-shadow:0_1px_0.02px_rgba(184,48,96,0.7),2px_2px_0.06px_rgba(184,48,96,0.7)]">
           {character.name}
         </p>
       </div>
 
-      {/* Hover: select overlay — targeting reticle */}
+      {/* Full-area select hit target */}
       <button
+        type="button"
         onClick={() => onSelect(character)}
-        className="char-slot-overlay absolute inset-0 z-30 flex items-center justify-center bg-[#C41E3A]/0 hover:bg-[#C41E3A]/30 transition-colors duration-200"
+        className="char-slot-overlay absolute inset-0 z-30 bg-[#C41E3A]/0 hover:bg-[#C41E3A]/30 transition-colors duration-200"
         aria-label={`Select ${character.name}`}
-      >
-        <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
-            <circle cx="24" cy="24" r="14" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" />
-            <circle cx="24" cy="24" r="4" fill="rgba(255,255,255,0.8)" />
-            <line x1="24" y1="6" x2="24" y2="14" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
-            <line x1="24" y1="34" x2="24" y2="42" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
-            <line x1="6" y1="24" x2="14" y2="24" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
-            <line x1="34" y1="24" x2="42" y2="24" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
-          </svg>
-        </span>
-      </button>
+      />
     </RecessedScreen>
   )
 }

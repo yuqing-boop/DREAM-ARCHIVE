@@ -5,14 +5,14 @@
  */
 
 /** Landing page — looping background video inside the main slot */
-export const landingVideoUrl = '/videos/landing-loop.mp4'
+export const landingVideoUrl = '/videos/landing-loop.webm'
 
 /** Transition video that plays between Landing and SelectionGrid */
-export const transitionVideoUrl = '/videos/intro-transition.mp4'
+export const transitionVideoUrl = '/videos/intro-transition.webm'
 
 /** Shared ending videos — good end if all 5 assets collected, bad end otherwise */
-export const goodEndVideoUrl = '/videos/end-good.mp4'
-export const badEndVideoUrl  = '/videos/end-bad.mp4'
+export const goodEndVideoUrl = '/videos/end-good.webm'
+export const badEndVideoUrl  = '/videos/end-bad.webm'
 
 const PLACEHOLDER_IMG  = (seed) => `https://picsum.photos/seed/${seed}/400/400`
 const PLACEHOLDER_WIDE = (seed) => `https://picsum.photos/seed/${seed}/800/450`
@@ -34,22 +34,22 @@ export const characters = [
     role: 'The Architect',
     profileImage: '/images/stern-profile.png',
     thumbnailImage: '/images/stern-thumb.png',
-    previewVideo: '/videos/stern-preview.mp4',
-    decorativeVideo: '/videos/stern-deco-loop.mp4',
+    previewVideo: '/videos/stern-preview.webm',
+    decorativeVideo: '/videos/stern-deco-loop.webm',
 
     narrativeText: `Suddenly understood. Urgency. Chasing my target, but what was it?`,
 
     mainFeedMedia: {
       type: 'video',
-      url: '/videos/stern-main.mp4',
+      url: '/videos/stern-main.webm',
       alt: 'Stern Law — The Architect',
     },
 
     thumbnailImages: [
-      { id: 'stern-t1', type: 'video', url: '/videos/stern-t1.mp4', caption: 'Site 7' },
-      { id: 'stern-t2', type: 'video', url: '/videos/stern-t2.mp4', caption: 'The Vault' },
-      { id: 'stern-t3', type: 'video', url: '/videos/stern-t3.mp4', caption: 'North Gate' },
-      { id: 'stern-t4', type: 'video', url: '/videos/stern-t4.mp4', caption: 'Substation' },
+      { id: 'stern-t1', type: 'video', url: '/videos/stern-t1.webm', caption: 'Site 7' },
+      { id: 'stern-t2', type: 'video', url: '/videos/stern-t2.webm', caption: 'The Vault' },
+      { id: 'stern-t3', type: 'video', url: '/videos/stern-t3.webm', caption: 'North Gate' },
+      { id: 'stern-t4', type: 'video', url: '/videos/stern-t4.webm', caption: 'Substation' },
     ],
 
     unlocksAssetIndex: 0,
@@ -69,22 +69,22 @@ export const characters = [
     profileAspectClass: 'aspect-[4/3]',
     profileImage: '/images/slink-profile.png',
     thumbnailImage: '/images/slink-thumb.png',
-    previewVideo: '/videos/slink-preview.mp4',
-    decorativeVideo: '/videos/slink-deco-loop.mp4',
+    previewVideo: '/videos/slink-preview.webm',
+    decorativeVideo: '/videos/slink-deco-loop.webm',
 
     narrativeText: `So close. Stealing in secret, then looting in the open. Fighting over a bag of sugar... was it that important?`,
 
     mainFeedMedia: {
       type: 'video',
-      url: '/videos/slink-main.mp4',
+      url: '/videos/slink-main.webm',
       alt: 'Sly & Flash Slink — The Fixer',
     },
 
     thumbnailImages: [
-      { id: 'slink-t1', type: 'video', url: '/videos/slink-t1.mp4', caption: 'Garage' },
-      { id: 'slink-t2', type: 'video', url: '/videos/slink-t2.mp4', caption: 'The Docks' },
-      { id: 'slink-t3', type: 'video', url: '/videos/slink-t3.mp4', caption: 'Pawn Shop' },
-      { id: 'slink-t4', type: 'video', url: '/videos/slink-t4.mp4', caption: 'Rooftop' },
+      { id: 'slink-t1', type: 'video', url: '/videos/slink-t1.webm', caption: 'Garage' },
+      { id: 'slink-t2', type: 'video', url: '/videos/slink-t2.webm', caption: 'The Docks' },
+      { id: 'slink-t3', type: 'video', url: '/videos/slink-t3.webm', caption: 'Pawn Shop' },
+      { id: 'slink-t4', type: 'video', url: '/videos/slink-t4.webm', caption: 'Rooftop' },
     ],
 
     unlocksAssetIndex: 1,
@@ -103,22 +103,22 @@ export const characters = [
     role: 'The Muscle',
     profileImage: '/images/meek-profile.png',
     thumbnailImage: '/images/meek-thumb.png',
-    previewVideo: '/videos/meek-preview.mp4',
-    decorativeVideo: '/videos/meek-deco-loop.mp4',
+    previewVideo: '/videos/meek-preview.webm',
+    decorativeVideo: '/videos/meek-deco-loop.webm',
 
     narrativeText: `A red stain that won't stop spreading, but the clock won't turn back. I am trapped in the After.`,
 
     mainFeedMedia: {
       type: 'video',
-      url: '/videos/meek-main.mp4',
+      url: '/videos/meek-main.webm',
       alt: 'Meek Gore — The Muscle',
     },
 
     thumbnailImages: [
-      { id: 'meek-t1', type: 'video', url: '/videos/meek-t1.mp4', caption: 'Gym' },
-      { id: 'meek-t2', type: 'video', url: '/videos/meek-t2.mp4', caption: 'Checkpoint' },
-      { id: 'meek-t3', type: 'video', url: '/videos/meek-t3.mp4', caption: 'Warehouse' },
-      { id: 'meek-t4', type: 'video', url: '/videos/meek-t4.mp4', caption: 'Alley' },
+      { id: 'meek-t1', type: 'video', url: '/videos/meek-t1.webm', caption: 'Gym' },
+      { id: 'meek-t2', type: 'video', url: '/videos/meek-t2.webm', caption: 'Checkpoint' },
+      { id: 'meek-t3', type: 'video', url: '/videos/meek-t3.webm', caption: 'Warehouse' },
+      { id: 'meek-t4', type: 'video', url: '/videos/meek-t4.webm', caption: 'Alley' },
     ],
 
     unlocksAssetIndex: 2,
@@ -137,23 +137,23 @@ export const characters = [
     role: 'The Broker',
     profileImage: '/images/odd-profile.png',
     thumbnailImage: '/images/odd-thumb.png',
-    previewVideo: '/videos/odd-preview.mp4',
-    decorativeVideo: '/videos/odd-deco-loop.mp4',
+    previewVideo: '/videos/odd-preview.webm',
+    decorativeVideo: '/videos/odd-deco-loop.webm',
 
     narrativeText: `Castle becomes forest. Turned around, a crowd was speaking to me at once.
 `,
 
     mainFeedMedia: {
       type: 'video',
-      url: '/videos/odd-main.mp4',
+      url: '/videos/odd-main.webm',
       alt: 'Odd Hop — The Broker',
     },
 
     thumbnailImages: [
-      { id: 'odd-t1', type: 'video', url: '/videos/odd-t1.mp4', caption: 'Café' },
-      { id: 'odd-t2', type: 'video', url: '/videos/odd-t2.mp4', caption: 'Gallery' },
-      { id: 'odd-t3', type: 'video', url: '/videos/odd-t3.mp4', caption: 'Hotel Lobby' },
-      { id: 'odd-t4', type: 'video', url: '/videos/odd-t4.mp4', caption: 'Train Car' },
+      { id: 'odd-t1', type: 'video', url: '/videos/odd-t1.webm', caption: 'Café' },
+      { id: 'odd-t2', type: 'video', url: '/videos/odd-t2.webm', caption: 'Gallery' },
+      { id: 'odd-t3', type: 'video', url: '/videos/odd-t3.webm', caption: 'Hotel Lobby' },
+      { id: 'odd-t4', type: 'video', url: '/videos/odd-t4.webm', caption: 'Train Car' },
     ],
 
     unlocksAssetIndex: 3,
@@ -172,22 +172,22 @@ export const characters = [
     role: 'The Wraith',
     profileImage: '/images/drowse-profile.png',
     thumbnailImage: '/images/drowse-thumb.png',
-    previewVideo: '/videos/drowse-preview.mp4',
-    decorativeVideo: '/videos/drowse-deco-loop.mp4',
+    previewVideo: '/videos/drowse-preview.webm',
+    decorativeVideo: '/videos/drowse-deco-loop.webm',
 
     narrativeText: `Floating, detached. Something happens nearby, but I refuse to turn my head.`,
 
     mainFeedMedia: {
       type: 'video',
-      url: '/videos/drowse-main.mp4',
+      url: '/videos/drowse-main.webm',
       alt: 'Drowse Heal — The Wraith',
     },
 
     thumbnailImages: [
-      { id: 'drowse-t1', type: 'video', url: '/videos/drowse-t1.mp4', caption: 'Casino' },
-      { id: 'drowse-t2', type: 'video', url: '/videos/drowse-t2.mp4', caption: 'Roof' },
-      { id: 'drowse-t3', type: 'video', url: '/videos/drowse-t3.mp4', caption: 'Corridor' },
-      { id: 'drowse-t4', type: 'video', url: '/videos/drowse-t4.mp4', caption: 'Exit' },
+      { id: 'drowse-t1', type: 'video', url: '/videos/drowse-t1.webm', caption: 'Casino' },
+      { id: 'drowse-t2', type: 'video', url: '/videos/drowse-t2.webm', caption: 'Roof' },
+      { id: 'drowse-t3', type: 'video', url: '/videos/drowse-t3.webm', caption: 'Corridor' },
+      { id: 'drowse-t4', type: 'video', url: '/videos/drowse-t4.webm', caption: 'Exit' },
     ],
 
     unlocksAssetIndex: 4,

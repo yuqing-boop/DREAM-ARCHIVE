@@ -1,49 +1,123 @@
 import { useRef, useEffect } from 'react'
-import { PC98Engine } from '../../PC98_VisualEngine'
 
 /**
  * UnifiedConsole
  * The Master Shell — owns full-screen centering, enforces 4:3 aspect ratio,
  * and renders the red plastic hardware surface. One instance per stage.
- * Media and controls are carved INTO it, not wrapped individually.
  *
- * Background pipeline:
- *  1. A hidden <video> plays /bg-moving.mp4 as the pixel source.
- *  2. Each rAF tick, the current frame is drawn into a 128×96 offscreen
- *     canvas that clips with ctx.roundRect() — matching the 70px CSS radius
- *     scaled down proportionally.
- *  3. The offscreen canvas is upscaled onto the display canvas using
- *     imageSmoothingEnabled=false (nearest-neighbour), producing natural
- *     stair-step pixelation on the rounded corners.
- *  4. A future dithering pass can be applied to the display canvas ctx
- *     without ever touching DOM text nodes.
+ * Corner strategy:
+ *   clip-path polygon() uses a quantised grid (CLIP_GRID_*) for stair-step corners.
+ *   CSS border-radius is NOT used; clip-path owns the shape entirely.
+ *
+ * Background:
+ *   Video is drawn full-bleed on the canvas; no canvas roundRect — the parent
+ *   clip-path polygon is the only corner mask so it matches the pixelated outline.
  */
 
-const SMALL_W = 128
-const SMALL_H = 96   // 4:3 ratio
-const CSS_RADIUS = 70 // mirrors .unified-console border-radius
+const CLIP_GRID_W = 256
+const CLIP_GRID_H = 192
+const CSS_RADIUS = 70  // visual corner radius in CSS px (canvas clip + clip-path)
+
+/**
+ * Builds a CSS polygon() string whose corners are staircase-quantised
+ * on the CLIP_GRID_W × CLIP_GRID_H lattice.
+ */
+function buildPixelatedClipPath(w, h) {
+  if (!w || !h) return ''
+  const PW = CLIP_GRID_W
+  const PH = CLIP_GRID_H
+  const R = Math.round(CSS_RADIUS * PW / w)
+  if (R <= 0) return ''
+
+  const px = w / PW
+  const py = h / PH
+
+  function trBnd(i) {
+    if (i >= R) return PW
+    const dy = i + 0.5 - R
+    const dx = Math.sqrt(Math.max(0, R * R - dy * dy))
+    return Math.floor(PW - R + dx - 0.5) + 1
+  }
+
+  const trBnds = Array.from({ length: R + 1 }, (_, i) => trBnd(i))
+  const tlBnds = trBnds.map(b => PW - b)
+
+  const pts = []
+  const pt = (x, y) => pts.push(`${x.toFixed(1)}px ${y.toFixed(1)}px`)
+
+  let prevTL = 0
+  pt(0, R * py)
+  for (let i = R - 1; i >= 0; i--) {
+    const nx = tlBnds[i]
+    if (nx !== prevTL) {
+      pt(prevTL * px, i * py)
+      pt(nx * px, i * py)
+      prevTL = nx
+    }
+  }
+
+  pt(trBnds[0] * px, 0)
+
+  let prevTR = trBnds[0]
+  for (let i = 1; i <= R; i++) {
+    const nx = trBnds[i]
+    if (nx !== prevTR) {
+      pt(prevTR * px, i * py)
+      pt(nx * px, i * py)
+      prevTR = nx
+    }
+  }
+
+  pt(PW * px, (PH - R) * py)
+
+  let prevBR = PW
+  for (let iy = PH - R + 1; iy <= PH - 1; iy++) {
+    const nx = trBnds[PH - 1 - iy]
+    if (nx !== prevBR) {
+      pt(prevBR * px, iy * py)
+      pt(nx * px, iy * py)
+      prevBR = nx
+    }
+  }
+  pt(prevBR * px, h)
+
+  pt(tlBnds[0] * px, h)
+
+  let prevBL = tlBnds[0]
+  for (let iy = PH - 2; iy >= PH - R; iy--) {
+    const nx = tlBnds[PH - 1 - iy]
+    if (nx !== prevBL) {
+      pt(prevBL * px, iy * py)
+      pt(nx * px, iy * py)
+      prevBL = nx
+    }
+  }
+  pt(0, (PH - R) * py)
+
+  return `polygon(${pts.join(', ')})`
+}
 
 export default function UnifiedConsole({ children, className = '', style }) {
-  const videoRef  = useRef(null)
-  const canvasRef = useRef(null)
+  const videoRef   = useRef(null)
+  const canvasRef  = useRef(null)
+  const consoleRef = useRef(null)
 
   useEffect(() => {
-    const video  = videoRef.current
-    const canvas = canvasRef.current
-    if (!video || !canvas) return
+    const video     = videoRef.current
+    const canvas    = canvasRef.current
+    const consoleEl = consoleRef.current
+    if (!video || !canvas || !consoleEl) return
 
     const ctx = canvas.getContext('2d')
 
-    // Offscreen low-res canvas — clipping + video frame happen here
-    const offscreen = document.createElement('canvas')
-    offscreen.width  = SMALL_W
-    offscreen.height = SMALL_H
-    const octx = offscreen.getContext('2d', { willReadFrequently: true })
-
-    // Keep display canvas pixel dimensions in sync with its CSS layout size
     const syncSize = () => {
-      canvas.width  = canvas.clientWidth
-      canvas.height = canvas.clientHeight
+      const w = canvas.clientWidth
+      const h = canvas.clientHeight
+      canvas.width  = w
+      canvas.height = h
+      if (w && h) {
+        consoleEl.style.clipPath = buildPixelatedClipPath(w, h)
+      }
     }
     syncSize()
     const ro = new ResizeObserver(syncSize)
@@ -53,36 +127,16 @@ export default function UnifiedConsole({ children, className = '', style }) {
 
     const draw = () => {
       rafId = requestAnimationFrame(draw)
-
       if (video.readyState < 2) return
 
       const cw = canvas.width
       const ch = canvas.height
       if (!cw || !ch) return
 
-      // Scale the 70px CSS border-radius down to the offscreen canvas size
-      const radius = CSS_RADIUS * (SMALL_W / cw)
-
-      // ── Offscreen: clip + draw video frame ──────────────────────────
-      octx.clearRect(0, 0, SMALL_W, SMALL_H)
-      octx.save()
-      octx.beginPath()
-      octx.roundRect(0, 0, SMALL_W, SMALL_H, radius)
-      octx.clip()
-      octx.drawImage(video, 0, 0, SMALL_W, SMALL_H)
-      octx.restore()
-
-      // ── PC98 pixel filter on the clipped offscreen frame ─────────────
-      const frame = octx.getImageData(0, 0, SMALL_W, SMALL_H)
-      PC98Engine.processImageData(frame, { palette: 'pc98', pattern: 'bayer4', strength: 40 })
-      octx.putImageData(frame, 0, 0)
-
-      // ── Display canvas: upscale with nearest-neighbour ───────────────
-      // imageSmoothingEnabled resets to true whenever canvas dimensions
-      // change (via ResizeObserver), so we set it before every draw.
       ctx.clearRect(0, 0, cw, ch)
-      ctx.imageSmoothingEnabled = false
-      ctx.drawImage(offscreen, 0, 0, cw, ch)
+      ctx.imageSmoothingEnabled = true
+      ctx.imageSmoothingQuality = 'high'
+      ctx.drawImage(video, 0, 0, cw, ch)
     }
 
     rafId = requestAnimationFrame(draw)
@@ -95,29 +149,30 @@ export default function UnifiedConsole({ children, className = '', style }) {
 
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-[rgba(10,16,10,1)]">
-      <div
-        className={`unified-console flex flex-col relative ${className}`}
-        style={{
-          width: 'min(90vw, calc(90vh * 4 / 3))',
-          aspectRatio: '4 / 3',
-          ...style,
-        }}
-      >
-        {/* Pixel source — kept off-screen, never rendered directly */}
-        <video
-          ref={videoRef}
-          src="/bg-moving.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          style={{ display: 'none' }}
-        />
+      <div style={{
+        width: 'min(90vw, calc(90vh * 4 / 3))',
+        aspectRatio: '4 / 3',
+        filter: 'drop-shadow(0px 6px 18px rgba(0,0,0,0.9))',
+      }}>
+        <div
+          ref={consoleRef}
+          className={`unified-console flex flex-col relative ${className}`}
+          style={{ width: '100%', height: '100%', ...style }}
+        >
+          <video
+            ref={videoRef}
+            src="/bg-moving.webm"
+            autoPlay
+            loop
+            muted
+            playsInline
+            style={{ display: 'none' }}
+          />
 
-        {/* Display canvas — shows the low-res-clipped, nearest-neighbour-upscaled frame */}
-        <canvas ref={canvasRef} className="console-bg-canvas" />
+          <canvas ref={canvasRef} className="console-bg-canvas" />
 
-        {children}
+          {children}
+        </div>
       </div>
     </div>
   )

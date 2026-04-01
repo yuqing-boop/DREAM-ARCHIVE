@@ -83,7 +83,7 @@ export default function IntroVideo({ onComplete, onSkip, onHome }) {
       >
         {/* Play / Pause */}
         <OvalButton
-          variant="purple"
+          variant="blue"
           size="sm"
           icon={isPlaying ? 'pause' : 'play'}
           onClick={togglePlay}

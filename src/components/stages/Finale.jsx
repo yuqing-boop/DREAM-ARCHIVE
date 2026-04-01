@@ -59,8 +59,8 @@ export default function Finale({ onRestart, onBack, collectedIds = [] }) {
               className="absolute z-20 flex flex-col items-center gap-2"
               style={{ bottom: 'calc(3% + 10px)', right: 'calc(3%)' }}
             >
-              <OvalButton variant="purple" icon="restart" onClick={onRestart} />
-              <OvalButton variant="purple" size="sm" onClick={onBack} />
+              <OvalButton variant="blue" icon="restart" onClick={onRestart} />
+              <OvalButton variant="blue" size="sm" onClick={onBack} />
             </div>
           </RecessedScreen>
         </div>
