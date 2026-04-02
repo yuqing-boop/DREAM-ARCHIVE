@@ -157,9 +157,10 @@ export default function UnifiedConsole({ children, className = '', style }) {
   }, [])
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-[rgba(10,16,10,1)]">
+    <div style={{ position: 'fixed', inset: 0, padding: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(10,16,10,1)' }}>
       <div style={{
-        width: 'min(90vw, calc(90vh * 4 / 3))',
+        width: '100%',
+        maxWidth: 'calc((100vh - 60px) * 4 / 3)',
         aspectRatio: '4 / 3',
         filter: 'drop-shadow(0px 6px 18px rgba(0,0,0,0.9))',
       }}>
