@@ -98,15 +98,17 @@ function buildPixelatedClipPath(w, h) {
 }
 
 export default function UnifiedConsole({ children, className = '', style }) {
-  const videoRef   = useRef(null)
-  const canvasRef  = useRef(null)
-  const consoleRef = useRef(null)
+  const videoRef    = useRef(null)
+  const canvasRef   = useRef(null)
+  const consoleRef  = useRef(null)
+  const contentRef  = useRef(null)
 
   useEffect(() => {
     const video     = videoRef.current
     const canvas    = canvasRef.current
     const consoleEl = consoleRef.current
-    if (!video || !canvas || !consoleEl) return
+    const contentEl = contentRef.current
+    if (!video || !canvas || !consoleEl || !contentEl) return
 
     const ctx = canvas.getContext('2d')
 
@@ -117,6 +119,13 @@ export default function UnifiedConsole({ children, className = '', style }) {
       canvas.height = h
       if (w && h) {
         consoleEl.style.clipPath = buildPixelatedClipPath(w, h)
+      }
+      // Scale children down proportionally if content overflows the frame
+      if (w > 0 && h > 0) {
+        const scaleX = w / contentEl.scrollWidth
+        const scaleY = h / contentEl.scrollHeight
+        const scale  = Math.min(scaleX, scaleY, 1)
+        contentEl.style.transform = scale < 0.999 ? `scale(${scale})` : ''
       }
     }
     syncSize()
@@ -166,8 +175,8 @@ export default function UnifiedConsole({ children, className = '', style }) {
       }}>
         <div
           ref={consoleRef}
-          className={`unified-console flex flex-col relative ${className}`}
-          style={{ width: '100%', height: '100%', ...style }}
+          className="unified-console relative"
+          style={{ width: '100%', height: '100%', overflow: 'hidden', ...style }}
         >
           <video
             ref={videoRef}
@@ -186,7 +195,15 @@ export default function UnifiedConsole({ children, className = '', style }) {
 
           <canvas ref={canvasRef} className="console-bg-canvas" />
 
-          {children}
+          {/* Content layer: carries the per-stage flex layout and scales down when the
+              viewport is too small to fit the content at its natural size. */}
+          <div
+            ref={contentRef}
+            className={`flex flex-col ${className}`}
+            style={{ position: 'absolute', inset: 0, transformOrigin: 'center center' }}
+          >
+            {children}
+          </div>
         </div>
       </div>
     </div>
