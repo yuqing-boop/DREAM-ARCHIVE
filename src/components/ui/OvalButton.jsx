@@ -23,7 +23,11 @@ export default function OvalButton({
   disabled = false,
   type = 'button',
   style,
+  title,
+  'aria-label': ariaLabel,
 }) {
+  const label = ariaLabel ?? title
+  const hasLabel = label != null && label !== ''
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
 
@@ -37,6 +41,8 @@ export default function OvalButton({
       disabled={disabled}
       className={`arcade-btn ${SIZES[size] ?? SIZES.md} ${className} ${disabled ? 'opacity-40 cursor-not-allowed' : ''}`}
       style={style}
+      title={title}
+      aria-label={label || undefined}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => { setHovered(false); setPressed(false) }}
       onMouseDown={() => setPressed(true)}
@@ -44,7 +50,8 @@ export default function OvalButton({
     >
       <img
         src={src}
-        alt={variant}
+        alt={hasLabel ? '' : variant}
+        aria-hidden={hasLabel ? true : undefined}
         draggable={false}
         className="w-full h-full object-contain select-none pointer-events-none"
       />

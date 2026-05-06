@@ -369,6 +369,29 @@ canvas {
   display: block;
 }
 
+/* MENU label — centered inside star, text only (GuideStar.jsx) */
+.guide-star-menu-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 0;
+  font-size: calc(var(--guide-star-size) * 0.098);
+  letter-spacing: 0.12em;
+  line-height: 1;
+  color: #fd8dc7;
+  pointer-events: none;
+  white-space: nowrap;
+  background: none;
+  border: none;
+  box-shadow: none;
+  text-shadow:
+    0 0 calc(var(--guide-star-size) * 0.02) rgba(80, 12, 40, 0.55),
+    0 1px 0 rgba(184, 48, 96, 0.4),
+    1px 2px calc(var(--guide-star-size) * 0.012) rgba(40, 0, 20, 0.35);
+}
 /* Guide panel — anchored SE of star; star overlaps top-left */
 .guide-panel {
   position: absolute;
@@ -517,4 +540,84 @@ canvas {
 .guide-ctrl-note {
   font-size: 12px;
   color: #a06070;
+}
+
+/* ============================================================
+   TUTORIAL ARROW — Floating bouncing pointer for new players
+   ============================================================ */
+
+@keyframes tutorial-bounce-up {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(-10px); }
+}
+@keyframes tutorial-bounce-down {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(10px); }
+}
+@keyframes tutorial-bounce-left {
+  0%, 100% { transform: translateY(-50%) translateX(0); }
+  50%       { transform: translateY(-50%) translateX(-10px); }
+}
+@keyframes tutorial-bounce-right {
+  0%, 100% { transform: translateY(-50%) translateX(0); }
+  50%       { transform: translateY(-50%) translateX(10px); }
+}
+
+.tutorial-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.tutorial-arrow--up    { animation: tutorial-bounce-down 0.8s ease-in-out infinite; }
+.tutorial-arrow--down  { animation: tutorial-bounce-up    0.8s ease-in-out infinite; }
+.tutorial-arrow--left  {
+  flex-direction: row-reverse;
+  animation: tutorial-bounce-left  0.8s ease-in-out infinite;
+}
+.tutorial-arrow--right {
+  flex-direction: row;
+  animation: tutorial-bounce-right 0.8s ease-in-out infinite;
+}
+
+.tutorial-arrow--left.tutorial-arrow--label-after {
+  flex-direction: row;
+}
+
+.tutorial-arrow-svg {
+  filter:
+    drop-shadow(0 0 6px rgba(184, 48, 96, 0.9))
+    drop-shadow(0 0 14px rgba(254, 88, 149, 0.5));
+  flex-shrink: 0;
+}
+
+.tutorial-arrow-label {
+  font-size: clamp(9px, 1.1vmin, 12px);
+  letter-spacing: 0.1em;
+  color: #ffd4ea;
+  white-space: nowrap;
+  text-shadow:
+    0 0 8px rgba(58, 0, 24, 0.9),
+    0 1px 0 rgba(184, 48, 96, 0.6);
+  background: rgba(8, 4, 22, 0.75);
+  padding: 0.2em 0.5em;
+  border-radius: 0.3em;
+  border: 1px solid rgba(184, 48, 96, 0.4);
+}
+
+/* For left/right arrows, keep label centered on its axis */
+.tutorial-arrow--left  .tutorial-arrow-label,
+.tutorial-arrow--right .tutorial-arrow-label {
+  align-self: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tutorial-arrow--up,
+  .tutorial-arrow--down,
+  .tutorial-arrow--left,
+  .tutorial-arrow--right {
+    animation: none;
+  }
 }

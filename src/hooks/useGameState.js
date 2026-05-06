@@ -16,6 +16,8 @@ export function useGameState() {
   const [collected, setCollected]     = useState(new Set())
   const [storyIndex, setStoryIndex]   = useState(0)
   const [collectedIds, setCollectedIds] = useState([])
+  // Tracks how many times the user has entered StoryConsole (tutorial active for first 2)
+  const [selectionCount, setSelectionCount] = useState(0)
 
   /** Add a character ID to the asset-collection list (no duplicates) */
   const addToCollected = useCallback((id) => {
@@ -37,6 +39,7 @@ export function useGameState() {
     const idx = characters.findIndex((c) => c.id === character.id)
     setStoryIndex(idx >= 0 ? idx : 0)
     setSelectedChar(character)
+    setSelectionCount((n) => n + 1)
     setStage('story')
   }, [])
 
@@ -83,6 +86,7 @@ export function useGameState() {
     setCollected(new Set())
     setStoryIndex(0)
     setCollectedIds([])
+    setSelectionCount(0)
   }, [])
 
   return {
@@ -91,6 +95,7 @@ export function useGameState() {
     collected,
     collectedIds,
     storyIndex,
+    selectionCount,
     goToIntro,
     goToSelection,
     goToLanding,

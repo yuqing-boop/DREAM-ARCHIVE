@@ -118,20 +118,23 @@ export default function GuideStar() {
             type="button"
             className={`guide-star-btn${!hasOpenedBefore ? ' guide-star-btn--unseen' : ''}`}
             onClick={handleStarClick}
-            title="操作指南"
-            aria-label="Toggle guide"
+            title="MENU — Rules and controls"
+            aria-label="Open menu: rules and how to play"
           >
             <img
               src="/guide-star.png"
-              alt="guide star"
+              alt=""
               className="guide-star-img"
               onError={(e) => {
                 e.currentTarget.style.display = 'none'
-                const svg = e.currentTarget.nextSibling
+                const svg = e.currentTarget.closest('button')?.querySelector('.guide-star-svg')
                 if (svg) svg.style.display = 'block'
               }}
               draggable={false}
             />
+            <span className="guide-star-menu-label font-pixelify" aria-hidden="true">
+              MENU
+            </span>
             <svg
               className="guide-star-svg"
               viewBox="0 0 32 32"

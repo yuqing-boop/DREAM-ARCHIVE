@@ -1,3 +1,5 @@
+import { forwardRef } from 'react'
+
 /**
  * ScreenLip
  * The high-contrast inner scoop/recess that transitions the plastic surface
@@ -5,10 +7,12 @@
  * Consistency Rule: always uses the same shadow logic to maintain the
  * "molded plastic" illusion.
  */
-export default function ScreenLip({ children, className = '', style }) {
+const ScreenLip = forwardRef(function ScreenLip({ children, className = '', style }, ref) {
   return (
-    <div className={`screen-lip ${className}`} style={style}>
+    <div ref={ref} className={`screen-lip ${className}`} style={style}>
       {children}
     </div>
   )
-}
+})
+
+export default ScreenLip

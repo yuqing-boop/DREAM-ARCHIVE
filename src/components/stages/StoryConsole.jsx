@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import UnifiedConsole from '../ui/UnifiedConsole'
 import ScreenLip from '../ui/ScreenLip'
 import RecessedScreen from '../ui/RecessedScreen'
 import NavCluster from '../navigation/NavCluster'
 import OvalButton from '../ui/OvalButton'
+import TutorialArrow from '../ui/TutorialArrow'
 import { characters, assetTrayIcons } from '../../data/characters'
 
 /**
@@ -19,6 +20,7 @@ export default function StoryConsole({
   onNext,
   collectedIds = [],
   onCollect,
+  isTutorialActive = false,
 }) {
   const [activeAsset, setActiveAsset] = useState(null)
   const [typedText, setTypedText] = useState('')
@@ -27,6 +29,16 @@ export default function StoryConsole({
   const [videoDuration, setVideoDuration] = useState(0)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const mainVideoRef = useRef(null)
+
+  // Tutorial state — step is null when tutorial is inactive
+  const [tutorialStep, setTutorialStep] = useState(isTutorialActive ? 'play-video' : null)
+  const [meanwhileGridHovered, setMeanwhileGridHovered] = useState(false)
+
+  // Refs for arrow targets
+  const tutorialRedPlayRef = useRef(null) // red overlay play on main feed video
+  const assetIconRefs  = useRef([])     // one ref per asset tray icon
+  const dreamNoteRef   = useRef(null)   // left-panel dream note text area
+  const rightTopClipRef = useRef(null)  // top meanwhile slot (right column)
 
   const toggleMainVideo = () => {
     const v = mainVideoRef.current
@@ -53,7 +65,13 @@ export default function StoryConsole({
     setVideoTime(0)
     setVideoDuration(0)
     setIsVideoPlaying(false)
-  }, [character?.id])
+    setMeanwhileGridHovered(false)
+    if (isTutorialActive) setTutorialStep('play-video')
+  }, [character?.id]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (tutorialStep !== 'see-clips') setMeanwhileGridHovered(false)
+  }, [tutorialStep])
 
   const handleVideoSeek = (e) => {
     const v = mainVideoRef.current
@@ -61,6 +79,14 @@ export default function StoryConsole({
     const bar = e.currentTarget
     const ratio = (e.clientX - bar.getBoundingClientRect().left) / bar.offsetWidth
     v.currentTime = Math.max(0, Math.min(1, ratio)) * v.duration
+  }
+
+  const handleMeanwhileGridEnter = () => {
+    if (isCollected && tutorialStep === 'see-clips') setMeanwhileGridHovered(true)
+  }
+
+  const handleMeanwhileGridLeave = () => {
+    setMeanwhileGridHovered(false)
   }
 
   // Typewriter effect — runs whenever a new asset is activated
@@ -72,16 +98,34 @@ export default function StoryConsole({
     const timer = setInterval(() => {
       i++
       setTypedText(text.slice(0, i))
-      if (i >= text.length) clearInterval(timer)
+      if (i >= text.length) {
+        clearInterval(timer)
+        // Tutorial: after Dream Note finishes typing, point at right-side clips
+        if (tutorialStep === 'read-note') {
+          setTutorialStep('see-clips')
+        }
+      }
     }, 80)
     return () => clearInterval(timer)
-  }, [activeAsset, character?.narrativeText])
+  }, [activeAsset, character?.narrativeText]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAssetClick = (iconId, idx) => {
     if (!isCollected) return
     if (idx !== character?.unlocksAssetIndex) return
     setActiveAsset(iconId)
+    // Tutorial: after clicking the correct asset, point at the Dream Note
+    if (tutorialStep === 'click-asset') {
+      setTutorialStep('read-note')
+    }
   }
+
+  // Called when the main video ends — advances tutorial from play-video → click-asset
+  const handleVideoEnded = useCallback((charId) => {
+    onCollect?.(charId)
+    if (tutorialStep === 'play-video') {
+      setTutorialStep('click-asset')
+    }
+  }, [onCollect, tutorialStep])
 
   if (!character) return null
 
@@ -133,7 +177,7 @@ export default function StoryConsole({
 
           {/* Text panel — static narrative or typewriter when asset is active */}
           <ScreenLip className="flex-1 min-h-0 mt-[2vmin] mb-[30px]" style={{ boxShadow: 'inset 6px 4px 12px 0px rgba(86, 41, 59, 0.5), -6px -5px 5px 0px rgba(74, 33, 47, 0.5), -5px -4px 6px 0px rgba(80, 33, 33, 0.6)' }}>
-            <RecessedScreen flat className="w-full h-full p-[1.5vmin] no-scanlines" style={{ background: '#ce5c82' }}>
+            <RecessedScreen ref={dreamNoteRef} flat className="w-full h-full p-[1.5vmin] no-scanlines" style={{ background: '#ce5c82' }}>
               <div className="overflow-y-auto h-full">
                 <p className="font-pixelify text-[20px] tracking-[1px] uppercase mb-3 text-center text-[#e8a0a8] [text-shadow:0_1px_0.02px_rgba(184,48,96,0.7),2px_2px_0.06px_rgba(184,48,96,0.7)]">
                   DREAM NOTE
@@ -164,8 +208,9 @@ export default function StoryConsole({
               <MainFeedMedia
                 key={character.id}
                 media={character.mainFeedMedia}
-                onEnded={() => onCollect?.(character.id)}
+                onEnded={() => handleVideoEnded(character.id)}
                 videoRef={mainVideoRef}
+                tutorialPlayTargetRef={isTutorialActive ? tutorialRedPlayRef : undefined}
                 onProgress={(t, d) => {
                   setVideoTime(t)
                   setVideoDuration(d)
@@ -212,7 +257,11 @@ export default function StoryConsole({
         </ScreenLip>
 
         {/* RIGHT — 4 mini recesses ("The Others") */}
-        <div className="w-[19.8%] shrink-0 flex flex-col gap-2 h-full relative -top-[21%] right-[0.8%]">
+        <div
+          className="w-[19.8%] shrink-0 flex flex-col gap-2 h-full relative -top-[21%] right-[0.8%]"
+          onMouseEnter={handleMeanwhileGridEnter}
+          onMouseLeave={handleMeanwhileGridLeave}
+        >
           {otherChars.map((otherChar, idx) => {
             const otherCharGlobalIdx = characters.findIndex((c) => c.id === otherChar.id)
             const thumbIdx = currentCharGlobalIdx < otherCharGlobalIdx
@@ -220,7 +269,11 @@ export default function StoryConsole({
               : currentCharGlobalIdx - 1
             const thumb = otherChar.thumbnailImages[thumbIdx]
             return (
-            <div key={otherChar.id} className="relative w-full pb-[75%] shrink-0">
+            <div
+              key={otherChar.id}
+              ref={idx === 0 ? rightTopClipRef : undefined}
+              className="relative w-full pb-[75%] shrink-0"
+            >
               <div className="absolute inset-0">
                 <ScreenLip className="w-full h-full" style={{ boxShadow: '-6px -5px 5px 0px rgba(108, 51, 73, 0.5), -5px -4px 6px 0px rgba(134, 45, 62, 0.6)' }}>
                   <RecessedScreen flat className="w-full h-full relative overflow-hidden" style={{ boxShadow: '0 0 0 1px rgba(0,0,0,0.5)' }}>
@@ -251,6 +304,7 @@ export default function StoryConsole({
                 isLit={unlockedAssetIndices.has(idx)}
                 isActive={activeAsset === icon.id}
                 onClick={() => handleAssetClick(icon.id, idx)}
+                iconRef={(el) => { assetIconRefs.current[idx] = el }}
               />
             ))}
           </div>
@@ -265,13 +319,46 @@ export default function StoryConsole({
         onNextChar={onNext}
       />
 
+      {/* ── TUTORIAL ARROWS ───────────────────────────────────── */}
+      {tutorialStep === 'play-video' && (
+        <TutorialArrow
+          targetRef={tutorialRedPlayRef}
+          direction="down"
+          offsetX={0}
+          offsetY={-20}
+          label="PLAY VIDEO FIRST"
+        />
+      )}
+      {tutorialStep === 'click-asset' && (
+        <TutorialArrow
+          targetRef={{ current: assetIconRefs.current[character.unlocksAssetIndex] }}
+          direction="down"
+          label={`CLICK THE ${assetTrayIcons[character.unlocksAssetIndex]?.label?.toUpperCase()}`}
+        />
+      )}
+      {tutorialStep === 'read-note' && (
+        <TutorialArrow
+          targetRef={dreamNoteRef}
+          direction="right"
+          label="YOUR DREAM NOTE"
+        />
+      )}
+      {tutorialStep === 'see-clips' && !meanwhileGridHovered && (
+        <TutorialArrow
+          targetRef={rightTopClipRef}
+          direction="left"
+          labelAfterArrow
+          label="MEANWHILE..."
+        />
+      )}
+
     </UnifiedConsole>
   )
 }
 
 /* ── Sub-components ─────────────────────────────────────────────── */
 
-function MainFeedMedia({ media, onEnded, videoRef: externalRef, onProgress, onPlayStateChange }) {
+function MainFeedMedia({ media, onEnded, videoRef: externalRef, onProgress, onPlayStateChange, tutorialPlayTargetRef }) {
   const internalRef = useRef(null)
   const videoRef = externalRef ?? internalRef
   const [isPlaying, setIsPlaying] = useState(false)
@@ -288,6 +375,9 @@ function MainFeedMedia({ media, onEnded, videoRef: externalRef, onProgress, onPl
       videoRef.current?.play()
       setPlaying(true)
     }
+
+    /* Tutorial: keep a measurable strip at the bottom while video plays so the arrow stays under the red play zone */
+    const overlayTutorial = !!tutorialPlayTargetRef
 
     return (
       <div className="relative w-full h-full">
@@ -310,10 +400,24 @@ function MainFeedMedia({ media, onEnded, videoRef: externalRef, onProgress, onPl
           className="w-full h-full object-cover relative z-10"
           aria-label={media.alt}
         />
-        {!isPlaying && (
-          <div className="absolute bottom-5 left-0 right-0 flex justify-center z-20">
-            <OvalButton variant="red" size="sm" icon="play" onClick={handlePlay} />
+        {overlayTutorial ? (
+          <div
+            ref={tutorialPlayTargetRef}
+            className="absolute bottom-[1.25rem] left-0 right-0 z-20 flex justify-center items-end"
+            style={{ minHeight: 'clamp(34px, 7.5vmin, 46px)', pointerEvents: 'none' }}
+          >
+            {!isPlaying && (
+              <span className="pointer-events-auto mb-px">
+                <OvalButton variant="red" size="sm" icon="play" onClick={handlePlay} />
+              </span>
+            )}
           </div>
+        ) : (
+          !isPlaying && (
+            <div className="absolute bottom-5 left-0 right-0 flex justify-center z-20">
+              <OvalButton variant="red" size="sm" icon="play" onClick={handlePlay} />
+            </div>
+          )
         )}
       </div>
     )
@@ -400,9 +504,10 @@ function ThumbnailSlot({ thumb, avatarSrc, avatarAlt, unlocked }) {
   )
 }
 
-function AssetIcon({ icon, isLit, isActive, onClick }) {
+function AssetIcon({ icon, isLit, isActive, onClick, iconRef }) {
   return (
     <div
+      ref={iconRef}
       className="flex flex-col items-center gap-1 shrink-0 select-none"
       onClick={isLit ? onClick : undefined}
       style={{

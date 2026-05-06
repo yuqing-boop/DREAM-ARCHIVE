@@ -17,20 +17,39 @@ export default function NavCluster({
   return (
     <div className="absolute flex flex-col items-end z-20" style={{ bottom: 'calc(3% + 10px)', right: 'calc(3% + 20px)', gap: '1.2vmin' }}>
       {onRestart && (
-        <OvalButton variant="blue" icon="restart" onClick={onRestart} />
+        <OvalButton
+          variant="blue"
+          onClick={onRestart}
+          title="Restart"
+          aria-label="Restart"
+        />
       )}
       <div className="grid grid-cols-2" style={{ gap: '0.8vmin' }}>
         {onPrevChar && (
-          <OvalButton variant="pink" size="sm" onClick={onPrevChar} />
+          <OvalButton
+            variant="pink"
+            size="sm"
+            onClick={onPrevChar}
+            title="Previous"
+            aria-label="Previous"
+          />
         )}
         {onNextChar && (
-          <OvalButton variant="red" size="sm" onClick={onNextChar} />
+          <OvalButton
+            variant="red"
+            size="sm"
+            onClick={onNextChar}
+            title="Next"
+            aria-label="Next"
+          />
         )}
         {onBack && (
           <OvalButton
             variant="blue"
             size="sm"
             onClick={onBack}
+            title="Back"
+            aria-label="Back"
           />
         )}
         {onNext && (
@@ -39,6 +58,8 @@ export default function NavCluster({
             size="sm"
             onClick={onNext}
             disabled={disableNext}
+            title="Proceed"
+            aria-label="Proceed"
           />
         )}
       </div>

@@ -17,6 +17,7 @@ export default function App() {
     selectedChar,
     collected,
     collectedIds,
+    selectionCount,
     goToIntro,
     goToSelection,
     goToLanding,
@@ -65,6 +66,7 @@ export default function App() {
           onNext={nextCharacter}
           collectedIds={collectedIds}
           onCollect={addToCollected}
+          isTutorialActive={selectionCount <= 2}
         />
       )
       break
